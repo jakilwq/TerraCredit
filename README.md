@@ -34,6 +34,7 @@ More information at [terra-credit.com](http://www.terra-credit.com) Visit our AN
 
 <table>
 <th>Block Height</th><th>Masternodes</th><th>Miner</th><th>Budget</th>
+<tr><td>2-1000</td><td>50% (2,500 CREDIT)</td><td>50% (2,500 CREDIT)</td><td>N/A</td></tr>
 </table>
 
 ### PoS Rewards Breakdown
