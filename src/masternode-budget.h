@@ -1,5 +1,5 @@
 // Copyright (c) 2014-2015 The Dash developers
-// Copyright (c) 2015-2020 The PIVX developers
+// Copyright (c) 2015-2019 The TERRACREDIT developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -16,7 +16,7 @@
 #include "util.h"
 
 
-extern RecursiveMutex cs_budget;
+extern CCriticalSection cs_budget;
 
 class CBudgetManager;
 class CFinalizedBudgetBroadcast;
@@ -88,7 +88,7 @@ public:
     ADD_SERIALIZE_METHODS;
 
     template <typename Stream, typename Operation>
-    inline void SerializationOp(Stream& s, Operation ser_action)
+    inline void SerializationOp(Stream& s, Operation ser_action, int nType, int nVersion)
     {
         READWRITE(vin);
         READWRITE(nProposalHash);
@@ -131,7 +131,7 @@ public:
     ADD_SERIALIZE_METHODS;
 
     template <typename Stream, typename Operation>
-    inline void SerializationOp(Stream& s, Operation ser_action)
+    inline void SerializationOp(Stream& s, Operation ser_action, int nType, int nVersion)
     {
         READWRITE(vin);
         READWRITE(nBudgetHash);
@@ -151,7 +151,7 @@ public:
 class CBudgetDB
 {
 private:
-    fs::path pathDB;
+    boost::filesystem::path pathDB;
     std::string strMagicMessage;
 
 public:
@@ -183,7 +183,7 @@ private:
 
 public:
     // critical section to protect the inner data structures
-    mutable RecursiveMutex cs;
+    mutable CCriticalSection cs;
 
     // keep track of the scanning errors I've seen
     std::map<uint256, CBudgetProposal> mapProposals;
@@ -263,7 +263,7 @@ public:
     ADD_SERIALIZE_METHODS;
 
     template <typename Stream, typename Operation>
-    inline void SerializationOp(Stream& s, Operation ser_action)
+    inline void SerializationOp(Stream& s, Operation ser_action, int nType, int nVersion)
     {
         READWRITE(mapSeenMasternodeBudgetProposals);
         READWRITE(mapSeenMasternodeBudgetVotes);
@@ -289,16 +289,16 @@ public:
     {
         payee = CScript();
         nAmount = 0;
-        nProposalHash = UINT256_ZERO;
+        nProposalHash = 0;
     }
 
     ADD_SERIALIZE_METHODS;
 
     //for saving to the serialized db
     template <typename Stream, typename Operation>
-    inline void SerializationOp(Stream& s, Operation ser_action)
+    inline void SerializationOp(Stream& s, Operation ser_action, int nType, int nVersion)
     {
-        READWRITE(*(CScriptBase*)(&payee));
+        READWRITE(payee);
         READWRITE(nAmount);
         READWRITE(nProposalHash);
     }
@@ -312,7 +312,7 @@ class CFinalizedBudget
 {
 private:
     // critical section to protect the inner data structures
-    mutable RecursiveMutex cs;
+    mutable CCriticalSection cs;
     bool fAutoChecked; //If it matches what we see, we'll auto vote for it (masternode only)
 
 public:
@@ -327,7 +327,7 @@ public:
     CFinalizedBudget();
     CFinalizedBudget(const CFinalizedBudget& other);
 
-    void CleanAndRemove();
+    void CleanAndRemove(bool fSignatureCheck);
     bool AddOrUpdateVote(CFinalizedBudgetVote& vote, std::string& strError);
     double GetScore();
     bool HasMinimumRequiredSupport();
@@ -365,7 +365,7 @@ public:
 
     // Verify and vote on finalized budget
     void CheckAndVote();
-    //total pivx paid out by this budget
+    //total terracredit paid out by this budget
     CAmount GetTotalPayout();
     //vote on this finalized budget as a masternode
     void SubmitVote();
@@ -388,7 +388,7 @@ public:
 
     //for saving to the serialized db
     template <typename Stream, typename Operation>
-    inline void SerializationOp(Stream& s, Operation ser_action)
+    inline void SerializationOp(Stream& s, Operation ser_action, int nType, int nVersion)
     {
         READWRITE(LIMITED_STRING(strBudgetName, 20));
         READWRITE(nFeeTXHash);
@@ -436,7 +436,7 @@ public:
 
     //for propagating messages
     template <typename Stream, typename Operation>
-    inline void SerializationOp(Stream& s, Operation ser_action)
+    inline void SerializationOp(Stream& s, Operation ser_action, int nType, int nVersion)
     {
         //for syncing with other clients
         READWRITE(LIMITED_STRING(strBudgetName, 20));
@@ -455,7 +455,7 @@ class CBudgetProposal
 {
 private:
     // critical section to protect the inner data structures
-    mutable RecursiveMutex cs;
+    mutable CCriticalSection cs;
     CAmount nAlloted;
 
 public:
@@ -509,7 +509,7 @@ public:
     void SetAllotted(CAmount nAllotedIn) { nAlloted = nAllotedIn; }
     CAmount GetAllotted() { return nAlloted; }
 
-    void CleanAndRemove();
+    void CleanAndRemove(bool fSignatureCheck);
 
     uint256 GetHash() const
     {
@@ -519,7 +519,7 @@ public:
         ss << nBlockStart;
         ss << nBlockEnd;
         ss << nAmount;
-        ss << std::vector<unsigned char>(address.begin(), address.end());
+        ss << address;
         uint256 h1 = ss.GetHash();
 
         return h1;
@@ -528,7 +528,7 @@ public:
     ADD_SERIALIZE_METHODS;
 
     template <typename Stream, typename Operation>
-    inline void SerializationOp(Stream& s, Operation ser_action)
+    inline void SerializationOp(Stream& s, Operation ser_action, int nType, int nVersion)
     {
         //for syncing with other clients
         READWRITE(LIMITED_STRING(strProposalName, 20));
@@ -537,7 +537,7 @@ public:
         READWRITE(nBlockStart);
         READWRITE(nBlockEnd);
         READWRITE(nAmount);
-        READWRITE(*(CScriptBase*)(&address));
+        READWRITE(address);
         READWRITE(nTime);
         READWRITE(nFeeTXHash);
 
@@ -584,7 +584,7 @@ public:
     ADD_SERIALIZE_METHODS;
 
     template <typename Stream, typename Operation>
-    inline void SerializationOp(Stream& s, Operation ser_action)
+    inline void SerializationOp(Stream& s, Operation ser_action, int nType, int nVersion)
     {
         //for syncing with other clients
 
@@ -594,7 +594,7 @@ public:
         READWRITE(nBlockStart);
         READWRITE(nBlockEnd);
         READWRITE(nAmount);
-        READWRITE(*(CScriptBase*)(&address));
+        READWRITE(address);
         READWRITE(nFeeTXHash);
     }
 };

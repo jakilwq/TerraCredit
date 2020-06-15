@@ -1,16 +1,15 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
 // Copyright (c) 2009-2014 The Bitcoin developers
 // Copyright (c) 2014-2015 The Dash developers
-// Copyright (c) 2015-2019 The PIVX developers
+// Copyright (c) 2015-2019 The TERRACREDIT developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef PIVX_HASH_H
-#define PIVX_HASH_H
+#ifndef TERRACREDIT_HASH_H
+#define TERRACREDIT_HASH_H
 
 #include "crypto/ripemd160.h"
 #include "crypto/sha256.h"
-#include "prevector.h"
 #include "serialize.h"
 #include "uint256.h"
 #include "version.h"
@@ -266,32 +265,22 @@ inline uint160 Hash160(const std::vector<unsigned char>& vch)
     return Hash160(vch.begin(), vch.end());
 }
 
-/** Compute the 160-bit hash of a vector. */
-template<unsigned int N>
-inline uint160 Hash160(const prevector<N, unsigned char>& vch)
-{
-    return Hash160(vch.begin(), vch.end());
-}
-
 /** A writer stream (for serialization) that computes a 256-bit hash. */
 class CHashWriter
 {
 private:
     CHash256 ctx;
 
-    const int nType;
-    const int nVersion;
-
 public:
+    int nType;
+    int nVersion;
 
     CHashWriter(int nTypeIn, int nVersionIn) : nType(nTypeIn), nVersion(nVersionIn) {}
 
-    int GetType() const { return nType; }
-    int GetVersion() const { return nVersion; }
-
-    void write(const char* pch, size_t size)
+    CHashWriter& write(const char* pch, size_t size)
     {
         ctx.Write((const unsigned char*)pch, size);
+        return (*this);
     }
 
     // invalidates the object
@@ -306,7 +295,7 @@ public:
     CHashWriter& operator<<(const T& obj)
     {
         // Serialize to this stream
-        ::Serialize(*this, obj);
+        ::Serialize(*this, obj, nType, nVersion);
         return (*this);
     }
 };
@@ -416,4 +405,4 @@ inline uint256 HashQuark(const T1 pbegin, const T1 pend)
 
 void scrypt_hash(const char* pass, unsigned int pLen, const char* salt, unsigned int sLen, char* output, unsigned int N, unsigned int r, unsigned int p, unsigned int dkLen);
 
-#endif // PIVX_HASH_H
+#endif // TERRACREDIT_HASH_H

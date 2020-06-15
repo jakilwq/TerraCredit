@@ -1,6 +1,6 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
 // Copyright (c) 2009-2014 The Bitcoin developers
-// Copyright (c) 2017-2020 The PIVX developers
+// Copyright (c) 2017-2019 The TERRACREDIT developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -11,14 +11,15 @@
 
 class CScheduler;
 class CWallet;
-class CzPIVWallet;
+class CzCREDITWallet;
 
 namespace boost
 {
 class thread_group;
 } // namespace boost
 
-extern CzPIVWallet* zwalletMain;
+extern CWallet* pwalletMain;
+extern CzCREDITWallet* zwalletMain;
 
 void StartShutdown();
 bool ShutdownRequested();
@@ -26,13 +27,9 @@ bool ShutdownRequested();
 void Interrupt();
 void Shutdown();
 void PrepareShutdown();
-//!Initialize the logging infrastructure
-void InitLogging();
-//!Parameter interaction: change current parameters depending on various rules
-void InitParameterInteraction();
 bool AppInit2();
 
-/** Initialize PIVX core: Basic context setup.
+/** Initialize TERRACREDIT core: Basic context setup.
  *  @note This can be done before daemonization. Do not call Shutdown() if this function fails.
  *  @pre Parameters should be parsed and config file should be read.
  */

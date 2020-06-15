@@ -1,18 +1,17 @@
 // Copyright (c) 2010 Satoshi Nakamoto
 // Copyright (c) 2009-2014 The Bitcoin developers
-// Copyright (c) 2017-2019 The PIVX developers
+// Copyright (c) 2017-2019 The TERRACREDIT developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #ifndef BITCOIN_RPCPROTOCOL_H
 #define BITCOIN_RPCPROTOCOL_H
 
-#include "fs.h"
-
 #include <list>
 #include <map>
 #include <stdint.h>
 #include <string>
+#include <boost/filesystem.hpp>
 
 #include <univalue.h>
 
@@ -28,7 +27,7 @@ enum HTTPStatusCode {
     HTTP_SERVICE_UNAVAILABLE   = 503,
 };
 
-//! PIVX RPC error codes
+//! TERRACREDIT RPC error codes
 enum RPCErrorCode {
     //! Standard JSON-RPC 2.0 errors
     RPC_INVALID_REQUEST     = -32600,
@@ -57,7 +56,7 @@ enum RPCErrorCode {
     RPC_TRANSACTION_ALREADY_IN_CHAIN    = RPC_VERIFY_ALREADY_IN_CHAIN,
 
     //! P2P client errors
-    RPC_CLIENT_NOT_CONNECTED            = -9, //! PIVX is not connected
+    RPC_CLIENT_NOT_CONNECTED            = -9, //! TERRACREDIT is not connected
     RPC_CLIENT_IN_INITIAL_DOWNLOAD      = -10, //! Still downloading initial blocks
     RPC_CLIENT_NODE_ALREADY_ADDED       = -23, //! Node is already added
     RPC_CLIENT_NODE_NOT_ADDED           = -24, //! Node has not been added before
@@ -82,7 +81,7 @@ std::string JSONRPCReply(const UniValue& result, const UniValue& error, const Un
 UniValue JSONRPCError(int code, const std::string& message);
 
 /** Get name of RPC authentication cookie file */
-fs::path GetAuthCookieFile();
+boost::filesystem::path GetAuthCookieFile();
 /** Generate a new RPC authentication cookie and write it to disk */
 bool GenerateAuthCookie(std::string *cookie_out);
 /** Read the RPC authentication cookie from disk */

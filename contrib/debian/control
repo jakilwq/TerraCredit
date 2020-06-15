@@ -1,4 +1,4 @@
-Source: pivx
+Source: terracredit
 Section: utils
 Priority: optional
 Maintainer: Fuzzbawls <fuzzbawls@gmail.com>
@@ -28,37 +28,37 @@ Build-Depends: debhelper,
  libzmq3-dev,
  dh-systemd
 Standards-Version: 3.9.2
-Homepage: http://www.pivx.org
-Vcs-Git: git://github.com/PIVX-Project/PIVX.git
-Vcs-Browser: http://github.com/PIVX-Project/PIVX
+Homepage: http://www.terra-credit.com
+Vcs-Git: git://github.com/TERRACREDIT-Project/TERRACREDIT.git
+Vcs-Browser: http://github.com/TERRACREDIT-Project/TERRACREDIT
 
-Package: pivxd
+Package: terracreditd
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: peer-to-peer network based digital currency - daemon
- PIVX is a free, open source peer-to-peer electronic cash system that
+ TERRACREDIT is a free open source peer-to-peer electronic cash system that
  is completely decentralized, without the need for a central server or
  trusted parties.  Users hold the crypto keys to their own money and
  transact directly with each other, with the help of a P2P network to
  check for double-spending.
  .
  Full transaction history is stored locally at each client.  This
- requires 18.5+ GB of space, slowly growing.
+ requires 10+ GB of space, slowly growing.
  .
- This package provides the daemon, pivxd, and the CLI tool
- pivx-cli to interact with the daemon.
+ This package provides the daemon, terracreditd, and the CLI tool
+ terracredit-cli to interact with the daemon.
 
-Package: pivx-qt
+Package: terracredit-qt
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: peer-to-peer network based digital currency - Qt GUI
- PIVX is a free, open source peer-to-peer electronic cash system that
+ TERRACREDIT is a free open source peer-to-peer electronic cash system that
  is completely decentralized, without the need for a central server or
  trusted parties.  Users hold the crypto keys to their own money and
  transact directly with each other, with the help of a P2P network to
  check for double-spending.
  .
  Full transaction history is stored locally at each client.  This
- requires 18.5+ GB of space, slowly growing.
+ requires 10+ GB of space, slowly growing.
  .
- This package provides Pivx-Qt, a GUI for PIVX based on Qt.
+ This package provides TerraCredit-Qt, a GUI for TERRACREDIT based on Qt.

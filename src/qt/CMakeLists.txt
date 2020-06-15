@@ -1,8 +1,7 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.10)
 
-set(QT_MINIMUM_VERSION 5.5.1)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
-set(CMAKE_AUTOUIC_SEARCH_PATHS ${CMAKE_CURRENT_SOURCE_DIR}/forms ${CMAKE_CURRENT_SOURCE_DIR}/pivx/forms ${CMAKE_CURRENT_SOURCE_DIR}/pivx/settings/forms)
+set(CMAKE_AUTOUIC_SEARCH_PATHS ${CMAKE_CURRENT_SOURCE_DIR}/forms ${CMAKE_CURRENT_SOURCE_DIR}/terracredit/forms ${CMAKE_CURRENT_SOURCE_DIR}/terracredit/settings/forms)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
@@ -11,12 +10,18 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 endif ()
 
+find_package(Qrcode)
+if (QRCODE_FOUND)
+    include_directories ( ${QRCODE_INCLUDE_DIR} )
+    link_directories ( ${QRCODE_LIBRARY_DIRS} )
+endif()
+
 unset(Qt5Enables)
 foreach(comp Widgets Core Gui Network LinguistTools DBus Svg Charts)
     find_package(Qt5${comp})
     set(Qt5Enables "${Qt5Enables};Qt5${comp}_FOUND")
     if(Qt5${comp}_FOUND)
-        MESSAGE(STATUS "FOUND Qt5${comp}")
+        MESSAGE(STATUS "FOUND QT5${comp}")
         include_directories(${include_directories} ${Qt5${comp}_INCLUDE_DIRS} ${QT_USE_FILE})
         add_definitions(${Qt5${comp}_DEFINITIONS})
         list(APPEND Qt5_LIBRARIES ${Qt5${comp}_LIBRARIES})
@@ -24,16 +29,6 @@ foreach(comp Widgets Core Gui Network LinguistTools DBus Svg Charts)
         MESSAGE(WARNING "Cant find Qt5${comp}")
     endif()
 endforeach(comp)
-
-if (Qt5Core_FOUND)
-    if (Qt5Core_VERSION VERSION_LESS QT_MINIMUM_VERSION)
-        MESSAGE(FATAL_ERROR "Minimum supported Qt5 version is ${QT_MINIMUM_VERSION}")
-    else()
-        MESSAGE(STATUS "Found Qt5 version: ${Qt5Core_VERSION}")
-    endif()
-else()
-    MESSAGE(FATAL_ERROR "Could not find any Qt5 installation")
-endif()
 
 if (Qt5DBus_FOUND)
     add_compile_options("-DUSE_DBUS")
@@ -43,21 +38,14 @@ if (Qt5Charts_FOUND)
     add_compile_options("-DUSE_QTCHARTS")
 endif()
 
-find_package(Qrcode)
-if (QRCODE_FOUND)
-    include_directories ( ${QRCODE_INCLUDE_DIR} )
-    link_directories ( ${QRCODE_LIBRARY_DIRS} )
-endif()
-
 find_program(MOC_BIN NAMES moc moc-qt5 qt5-moc
         PATHS /usr/lib/qt5/bin /usr/lib/x86_64-linux-gnu/qt5/bin /usr/local/opt/qt/bin /usr/local/opt/qt5/bin
         NO_DEFAULT_PATH
         NO_SYSTEM_ENVIRONMENT_PATH)
 if (MOC_BIN)
     MESSAGE(STATUS "FOUND MOC ${MOC_BIN}")
-endif ()
 
-add_compile_options("-DQT_NO_KEYWORDS")
+endif ()
 
 # Why isn't this done automatically??
 if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
@@ -79,10 +67,13 @@ PROTOBUF_GENERATE_CPP(PROTO_SRCS PROTO_HDRS ${CMAKE_CURRENT_SOURCE_DIR}/paymentr
 
 SET(QT_SOURCES
         ${CMAKE_CURRENT_SOURCE_DIR}/bantablemodel.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/blockexplorer.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/bitcoinaddressvalidator.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/bitcoinamountfield.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/bitcoinunits.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/clientmodel.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/csvmodelwriter.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/governancepage.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/guiutil.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/intro.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/networkstyle.cpp
@@ -101,7 +92,9 @@ SET(QT_SOURCES
         ${CMAKE_CURRENT_SOURCE_DIR}/addresstablemodel.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/askpassphrasedialog.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/coincontroldialog.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/zcreditcontroldialog.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/coincontroltreewidget.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/proposalframe.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/editaddressdialog.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/openuridialog.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/paymentrequestplus.cpp
@@ -113,80 +106,83 @@ SET(QT_SOURCES
         ${CMAKE_CURRENT_SOURCE_DIR}/transactiontablemodel.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/walletmodel.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/walletmodeltransaction.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/pivx/pivxgui.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/pivx/loadingdialog.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/pivx/pwidget.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/pivx/focuseddialog.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/pivx/guitransactionsutils.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/pivx/snackbar.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/pivx/navmenuwidget.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/pivx/lockunlock.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/pivx/receivedialog.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/pivx/furabstractlistitemdelegate.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/pivx/txviewholder.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/pivx/qtutils.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/pivx/expandablebutton.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/pivx/topbar.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/pivx/txrow.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/pivx/addressfilterproxymodel.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/pivx/dashboardwidget.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/pivx/addresslabelrow.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/pivx/contactdropdownrow.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/pivx/contactsdropdown.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/pivx/optionbutton.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/pivx/mninfodialog.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/pivx/coldstakingmodel.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/pivx/mnmodel.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/pivx/masternodewizarddialog.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/pivx/mnrow.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/pivx/masternodeswidget.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/pivx/sendchangeaddressdialog.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/pivx/sendconfirmdialog.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/pivx/sendcustomfeedialog.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/pivx/sendchangeaddressdialog.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/pivx/sendmultirow.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/pivx/send.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/pivx/addnewaddressdialog.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/pivx/addnewcontactdialog.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/pivx/requestdialog.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/pivx/receivewidget.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/pivx/myaddressrow.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/pivx/csrow.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/pivx/addressholder.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/pivx/tooltipmenu.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/pivx/addresseswidget.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/pivx/defaultdialog.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/pivx/coldstakingwidget.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/pivx/settings/settingsbackupwallet.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/pivx/settings/settingsbittoolwidget.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/pivx/settings/settingsconsolewidget.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/pivx/settings/settingsdisplayoptionswidget.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/pivx/settings/settingsfaqwidget.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/pivx/settings/settingsinformationwidget.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/pivx/settings/settingsmainoptionswidget.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/pivx/settings/settingsmultisenddialog.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/pivx/settings/settingsmultisendwidget.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/pivx/settings/settingssignmessagewidgets.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/pivx/settings/settingswalletoptionswidget.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/pivx/settings/settingswalletrepairwidget.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/pivx/settings/settingsexportcsv.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/pivx/settings/settingswidget.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/pivx/welcomecontentwidget.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/pivx/splash.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/zcreditcontroldialog.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/terracredit/terracreditgui.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/terracredit/loadingdialog.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/terracredit/pwidget.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/terracredit/guitransactionsutils.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/terracredit/snackbar.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/terracredit/navmenuwidget.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/terracredit/lockunlock.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/terracredit/receivedialog.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/terracredit/furabstractlistitemdelegate.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/terracredit/txviewholder.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/terracredit/qtutils.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/terracredit/expandablebutton.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/terracredit/walletpassworddialog.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/terracredit/topbar.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/terracredit/txrow.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/terracredit/addressfilterproxymodel.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/terracredit/dashboardwidget.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/terracredit/coincontrolcreditwidget.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/terracredit/addresslabelrow.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/terracredit/contactdropdownrow.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/terracredit/contactsdropdown.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/terracredit/optionbutton.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/terracredit/mninfodialog.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/terracredit/coldstakingmodel.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/terracredit/mnmodel.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/terracredit/masternodewizarddialog.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/terracredit/mnrow.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/terracredit/masternodeswidget.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/terracredit/sendchangeaddressdialog.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/terracredit/sendconfirmdialog.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/terracredit/sendcustomfeedialog.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/terracredit/sendchangeaddressdialog.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/terracredit/sendmultirow.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/terracredit/send.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/terracredit/addnewaddressdialog.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/terracredit/addnewcontactdialog.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/terracredit/requestdialog.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/terracredit/receivewidget.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/terracredit/myaddressrow.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/terracredit/csrow.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/terracredit/addressholder.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/terracredit/tooltipmenu.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/terracredit/addresseswidget.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/terracredit/defaultdialog.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/terracredit/denomgenerationdialog.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/terracredit/privacywidget.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/terracredit/coldstakingwidget.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/terracredit/settings/settingsbackupwallet.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/terracredit/settings/settingsbittoolwidget.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/terracredit/settings/settingsconsolewidget.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/terracredit/settings/settingsdisplayoptionswidget.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/terracredit/settings/settingsfaqwidget.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/terracredit/settings/settingsinformationwidget.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/terracredit/settings/settingsmainoptionswidget.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/terracredit/settings/settingsmultisenddialog.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/terracredit/settings/settingsmultisendwidget.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/terracredit/settings/settingssignmessagewidgets.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/terracredit/settings/settingswalletoptionswidget.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/terracredit/settings/settingswalletrepairwidget.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/terracredit/settings/settingswidget.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/terracredit/welcomecontentwidget.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/terracredit/splash.cpp
         )
 
 # Workaround until the old rpcconsole UI window is fully removed
-set_property(SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/pivx/settings/settingsconsolewidget.cpp PROPERTY SKIP_AUTOMOC ON)
+set_property(SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/terracredit/settings/settingsconsolewidget.cpp PROPERTY SKIP_AUTOMOC ON)
 execute_process(
         COMMAND ${MOC_BIN} -o moc_settingsconsolewidget.cpp settingsconsolewidget.h
-        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/pivx/settings
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/terracredit/settings
 )
 
 execute_process(
         COMMAND ${MOC_BIN} -o moc_pfborderimage.cpp pfborderimage.h
-        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/pivx
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/terracredit
 )
-list(APPEND QT_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/pivx/moc_pfborderimage.cpp)
+list(APPEND QT_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/terracredit/moc_pfborderimage.cpp)
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     list(APPEND QT_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/macdockiconhandler.mm)
@@ -199,8 +195,8 @@ target_include_directories(qt_stuff PUBLIC ${CMAKE_SOURCE_DIR}/src
         ${CMAKE_SOURCE_DIR}/src/univalue/include
         ${CMAKE_SOURCE_DIR}/src/secp256k1/include
         ${CMAKE_CURRENT_SOURCE_DIR}
-        ${CMAKE_CURRENT_SOURCE_DIR}/pivx
-        ${CMAKE_CURRENT_SOURCE_DIR}/pivx/settings
+        ${CMAKE_CURRENT_SOURCE_DIR}/terracredit
+        ${CMAKE_CURRENT_SOURCE_DIR}/terracredit/settings
         ${OPENSSL_INCLUDE_DIR}
         ${BerkeleyDB_INCLUDE_DIRS}
         )
@@ -214,13 +210,13 @@ set_source_files_properties(${QT_TRANSLATIONS_FILES} PROPERTIES OUTPUT_LOCATION 
 QT5_ADD_TRANSLATION(QM ${QT_TRANSLATIONS_FILES})
 add_custom_target(translations_target ALL DEPENDS ${QM})
 
-QT5_ADD_RESOURCES(QRC_RESOURCE pivx.qrc)
-QT5_ADD_RESOURCES(QRC_LOCALE_RESOURCE pivx_locale.qrc)
+QT5_ADD_RESOURCES(QRC_RESOURCE terracredit.qrc)
+QT5_ADD_RESOURCES(QRC_LOCALE_RESOURCE terracredit_locale.qrc)
 
-add_executable(pivx-qt pivx.cpp ${QM} ${QRC_RESOURCE} ${QRC_LOCALE_RESOURCE})
-add_dependencies(pivx-qt translations_target libunivalue libsecp256k1 leveldb leveldb_sse42 memenv)
-target_include_directories(pivx-qt PUBLIC ${ENDIAN_INCLUDES})
-target_link_libraries(pivx-qt
+add_executable(terracredit-qt terracredit.cpp ${QM} ${QRC_RESOURCE} ${QRC_LOCALE_RESOURCE})
+add_dependencies(terracredit-qt translations_target libunivalue libsecp256k1 leveldb leveldb_sse42 memenv)
+target_include_directories(terracredit-qt PUBLIC ${ENDIAN_INCLUDES})
+target_link_libraries(terracredit-qt
         qt_stuff
         univalue
         SERVER_A UTIL_A WALLET_A CLI_A COMMON_A BITCOIN_CRYPTO_A ZEROCOIN_A
@@ -229,30 +225,30 @@ target_link_libraries(pivx-qt
         pthread
         )
 if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-    target_link_libraries(pivx-qt "-framework Cocoa")
+    target_link_libraries(terracredit-qt "-framework Cocoa")
 endif()
 if(GMP_FOUND)
-    target_link_libraries(pivx-qt ${GMP_LIBRARY})
-    target_include_directories(pivx-qt PUBLIC ${GMP_INCLUDE_DIR})
+    target_link_libraries(terracredit-qt ${GMP_LIBRARY})
+    target_include_directories(terracredit-qt PUBLIC ${GMP_INCLUDE_DIR})
 endif()
 if(ZMQ_FOUND)
-    target_link_libraries(pivx-qt ZMQ_A ${ZMQ_LIB})
-    target_include_directories(pivx-qt PUBLIC ${ZMQ_INCLUDE_DIR})
+    target_link_libraries(terracredit-qt ZMQ_A ${ZMQ_LIB})
+    target_include_directories(terracredit-qt PUBLIC ${ZMQ_INCLUDE_DIR})
 endif()
 if (QRCODE_FOUND)
-    target_link_libraries(pivx-qt ${QRCODE_LIB})
-    target_include_directories(pivx-qt PUBLIC ${QRCODE_INCLUDE_DIR})
+    target_link_libraries(terracredit-qt ${QRCODE_LIB})
+    target_include_directories(terracredit-qt PUBLIC ${QRCODE_INCLUDE_DIR})
 endif()
 if(MINIUPNP_FOUND)
-    target_compile_definitions(pivx-qt PUBLIC "-DSTATICLIB -DMINIUPNP_STATICLIB")
-    target_link_libraries(pivx-qt ${MINIUPNP_LIBRARY})
-    target_include_directories(pivx-qt PUBLIC ${MINIUPNP_INCLUDE_DIR})
+    target_compile_definitions(terracredit-qt PUBLIC "-DSTATICLIB -DMINIUPNP_STATICLIB")
+    target_link_libraries(terracredit-qt ${MINIUPNP_LIBRARY})
+    target_include_directories(terracredit-qt PUBLIC ${MINIUPNP_INCLUDE_DIR})
 endif()
 
-target_link_libraries(pivx-qt Qt5::Gui Qt5::Core Qt5::Widgets Qt5::Network Qt5::Svg ${QT_LIBRARIES})
+target_link_libraries(terracredit-qt Qt5::Gui Qt5::Core Qt5::Widgets Qt5::Network Qt5::Svg ${QT_LIBRARIES})
 if (Qt5DBus_FOUND)
-    target_link_libraries(pivx-qt Qt5::DBus ${QT_LIBRARIES})
+    target_link_libraries(terracredit-qt Qt5::DBus ${QT_LIBRARIES})
 endif()
 if (Qt5Charts_FOUND)
-    target_link_libraries(pivx-qt Qt5::Charts ${QT_LIBRARIES})
+    target_link_libraries(terracredit-qt Qt5::Charts ${QT_LIBRARIES})
 endif()

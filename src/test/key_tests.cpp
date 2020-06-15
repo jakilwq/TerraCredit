@@ -1,5 +1,5 @@
 // Copyright (c) 2012-2013 The Bitcoin Core developers
-// Copyright (c) 2017-2019 The PIVX developers
+// Copyright (c) 2017-2019 The TERRACREDIT developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -10,7 +10,7 @@
 #include "uint256.h"
 #include "util.h"
 #include "utilstrencodings.h"
-#include "test_pivx.h"
+#include "test_terracredit.h"
 
 #include <string>
 #include <vector>
@@ -18,17 +18,17 @@
 #include <boost/test/unit_test.hpp>
 
 
-static const std::string strSecret1  = "87vK7Vayi3QLsuiva5yWSuVwSMhMcRM9dBsaD6JXMD1P5vnjRFn";
-static const std::string strSecret2  = "87FGYGFDg5SYfdD4XL593hr7do6f52czPecVsYSAXi8N4RGeS9i";
-static const std::string strSecret1C = "YRYJwfAyJ9c2jhi3T2xQyLijGvM7yLTw4izDaNQLxBzgUYrQiPmJ";
-static const std::string strSecret2C = "YNZyazHkwUbkmUpEYsBGWwHnHQTy2n9rJy1gS5k54YXVx3pE8n6N";
-static const std::string addr1 = "DBFi8XAE1rcdCQfkv9w22n8Y9RxgaJnrDD";
-static const std::string addr2 = "DPvKfv1FVp69yZMDzeuugvfZ9pzYiMv1bs";
-static const std::string addr1C = "DNPrHK9ezAAUVExFDpZ7EE1xWpPskgp1gP";
-static const std::string addr2C = "DNBVSAoc2whPFjZVAZ1pQbXPJk1LRrDC8Q";
+static const std::string strSecret1     ("87vK7Vayi3QLsuiva5yWSuVwSMhMcRM9dBsaD6JXMD1P5vnjRFn");
+static const std::string strSecret2     ("87FGYGFDg5SYfdD4XL593hr7do6f52czPecVsYSAXi8N4RGeS9i");
+static const std::string strSecret1C    ("YRYJwfAyJ9c2jhi3T2xQyLijGvM7yLTw4izDaNQLxBzgUYrQiPmJ");
+static const std::string strSecret2C    ("YNZyazHkwUbkmUpEYsBGWwHnHQTy2n9rJy1gS5k54YXVx3pE8n6N");
+static const CBitcoinAddress addr1 ("DBFi8XAE1rcdCQfkv9w22n8Y9RxgaJnrDD");
+static const CBitcoinAddress addr2 ("DPvKfv1FVp69yZMDzeuugvfZ9pzYiMv1bs");
+static const CBitcoinAddress addr1C("DNPrHK9ezAAUVExFDpZ7EE1xWpPskgp1gP");
+static const CBitcoinAddress addr2C("DNBVSAoc2whPFjZVAZ1pQbXPJk1LRrDC8Q");
 
 
-static const std::string strAddressBad ="Xta1praZQjyELweyMByXyiREw1ZRsjXzVP";
+static const std::string strAddressBad("Xta1praZQjyELweyMByXyiREw1ZRsjXzVP");
 
 
 #ifdef KEY_TESTS_DUMPINFO
@@ -53,7 +53,7 @@ void dumpKeyInfo(uint256 privkey)
         key.SetSecret(secret, fCompressed);
         std::vector<unsigned char> vchPubKey = key.GetPubKey();
         printf("    * pubkey (hex): %s\n", HexStr(vchPubKey).c_str());
-        printf("    * address (base58): %s\n", EncodeDestination(vchPubKey).c_str());
+        printf("    * address (base58): %s\n", CBitcoinAddress(vchPubKey).ToString().c_str());
     }
 }
 #endif
@@ -103,10 +103,10 @@ BOOST_AUTO_TEST_CASE(key_test1)
     BOOST_CHECK(!key2C.VerifyPubKey(pubkey2));
     BOOST_CHECK(key2C.VerifyPubKey(pubkey2C));
 
-    BOOST_CHECK(DecodeDestination(addr1)  == CTxDestination(pubkey1.GetID()));
-    BOOST_CHECK(DecodeDestination(addr2)  == CTxDestination(pubkey2.GetID()));
-    BOOST_CHECK(DecodeDestination(addr1C) == CTxDestination(pubkey1C.GetID()));
-    BOOST_CHECK(DecodeDestination(addr2C) == CTxDestination(pubkey2C.GetID()));
+    BOOST_CHECK(addr1.Get()  == CTxDestination(pubkey1.GetID()));
+    BOOST_CHECK(addr2.Get()  == CTxDestination(pubkey2.GetID()));
+    BOOST_CHECK(addr1C.Get() == CTxDestination(pubkey1C.GetID()));
+    BOOST_CHECK(addr2C.Get() == CTxDestination(pubkey2C.GetID()));
 
     for (int n=0; n<16; n++)
     {

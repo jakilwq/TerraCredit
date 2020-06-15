@@ -1,5 +1,5 @@
 // Copyright (c) 2012-2017 The Bitcoin Core developers
-// Copyright (c) 2016-2019 The PIVX developers
+// Copyright (c) 2016-2019 The TERRACREDIT developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -10,10 +10,10 @@
 
 /**
  * Name of client reported in the 'version' message. Report the same name
- * for both pivxd and pivx-qt, to make it harder for attackers to
+ * for both terracreditd and terracredit-qt, to make it harder for attackers to
  * target servers or GUI users specifically.
  */
-const std::string CLIENT_NAME("PIVX Core");
+const std::string CLIENT_NAME("TERRACREDIT Core");
 
 /**
  * Client version number
@@ -42,10 +42,11 @@ const std::string CLIENT_NAME("PIVX Core");
 #include "obj/build.h"
 #endif
 
-//! git will put "#define GIT_ARCHIVE 1" on the next line inside archives. $Format:%n#define GIT_ARCHIVE 1$
+//! git will put "#define GIT_ARCHIVE 1" on the next line inside archives. 
+#define GIT_ARCHIVE 1
 #ifdef GIT_ARCHIVE
-#define GIT_COMMIT_ID "$Format:%H$"
-#define GIT_COMMIT_DATE "$Format:%cD$"
+#define GIT_COMMIT_ID "b005d840a8e694a9e0726131a580fc72dcab2b53"
+#define GIT_COMMIT_DATE "Sun, 15 Dec 2019 03:51:34 -0800"
 #endif
 
 #define BUILD_DESC_WITH_SUFFIX(maj, min, rev, build, suffix) \

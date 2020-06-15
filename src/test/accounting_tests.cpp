@@ -1,12 +1,12 @@
 // Copyright (c) 2012-2014 The Bitcoin Core developers
-// Copyright (c) 2018-2020 The PIVX developers
+// Copyright (c) 2018-2019 The TERRACREDIT developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include "wallet/wallet.h"
 #include "wallet/walletdb.h"
 
-#include "wallet/test/wallet_test_fixture.h"
+#include "test/test_terracredit.h"
 
 #include <stdint.h>
 
@@ -14,7 +14,7 @@
 
 extern CWallet* pwalletMain;
 
-BOOST_FIXTURE_TEST_SUITE(accounting_tests, WalletTestingSetup)
+BOOST_FIXTURE_TEST_SUITE(accounting_tests, TestingSetup)
 
 static void
 GetResults(CWalletDB& walletdb, std::map<CAmount, CAccountingEntry>& results)

@@ -1,5 +1,5 @@
 // Copyright (c) 2011-2013 The Bitcoin developers
-// Copyright (c) 2017-2020 The PIVX developers
+// Copyright (c) 2017-2019 The TERRACREDIT developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -7,7 +7,6 @@
 #define BITCOIN_QT_COINCONTROLDIALOG_H
 
 #include "amount.h"
-#include "qt/pivx/snackbar.h"
 
 #include <QAbstractButton>
 #include <QAction>
@@ -44,30 +43,28 @@ class CoinControlDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit CoinControlDialog(QWidget* parent = nullptr, bool _forDelegation = false);
+    explicit CoinControlDialog(QWidget* parent = nullptr, bool fMultisigEnabled = false);
     ~CoinControlDialog();
 
     void setModel(WalletModel* model);
     void updateDialogLabels();
-    void updateLabels();
     void updateView();
     void refreshDialog();
-    void clearPayAmounts();
-    void addPayAmount(const CAmount& amount);
 
+    // static because also called from sendcoinsdialog
+    static void updateLabels(WalletModel*, QDialog*);
     static QString getPriorityLabel(double dPriority, double mempoolEstimatePriority);
 
+    static QList<CAmount> payAmounts;
     static CCoinControl* coinControl;
+    static int nSplitBlockDummy;
 
 private:
     Ui::CoinControlDialog* ui;
-    SnackBar *snackBar = nullptr;
     WalletModel* model;
     int sortColumn;
     Qt::SortOrder sortOrder;
-    bool forDelegation;
-    bool fSelectAllToggled{true};     // false when pushButtonSelectAll text is "Unselect All"
-    QList<CAmount> payAmounts{};
+    bool fMultisigEnabled;
 
     QMenu* contextMenu;
     QTreeWidgetItem* contextMenuItem;
@@ -76,7 +73,6 @@ private:
     QAction* unlockAction;
 
     void sortView(int, Qt::SortOrder);
-    void inform(const QString& text);
 
     enum {
         COLUMN_CHECKBOX,
@@ -90,7 +86,7 @@ private:
     };
     friend class CCoinControlWidgetItem;
 
-private Q_SLOTS:
+private slots:
     void showMenu(const QPoint&);
     void copyAmount();
     void copyLabel();

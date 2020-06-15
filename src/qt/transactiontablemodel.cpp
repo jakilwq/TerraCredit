@@ -1,6 +1,6 @@
 // Copyright (c) 2011-2014 The Bitcoin developers
 // Copyright (c) 2014-2016 The Dash developers
-// Copyright (c) 2016-2020 The PIVX developers
+// Copyright (c) 2016-2019 The TERRACREDIT developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -20,8 +20,6 @@
 #include "util.h"
 #include "wallet/wallet.h"
 
-#include <algorithm>
-
 #include <QColor>
 #include <QDateTime>
 #include <QDebug>
@@ -31,11 +29,6 @@
 #include <QFuture>
 
 #define SINGLE_THREAD_MAX_TXES_SIZE 4000
-
-// Maximum amount of loaded records in ram in the first load.
-// If the user has more and want to load them:
-// TODO, add load on demand in pages (not every tx loaded all the time into the records list).
-#define MAX_AMOUNT_LOADED_RECORDS 20000
 
 // Amount column is right-aligned it contains numbers
 static int column_alignments[] = {
@@ -94,21 +87,6 @@ public:
         // Divide the work between multiple threads to speedup the process if the vector is larger than 4k txes
         std::size_t txesSize = walletTxes.size();
         if (txesSize > SINGLE_THREAD_MAX_TXES_SIZE) {
-
-            // First check if the amount of txs exceeds the UI limit
-            if (txesSize > MAX_AMOUNT_LOADED_RECORDS) {
-                // Sort the txs by date just to be really really sure that them are ordered.
-                // (this extra calculation should be removed in the future if can ensure that
-                // txs are stored in order in the db, which is what should be happening)
-                sort(walletTxes.begin(), walletTxes.end(),
-                        [](const CWalletTx & a, const CWalletTx & b) -> bool {
-                         return a.GetTxTime() > b.GetTxTime();
-                     });
-
-                // Only latest ones.
-                walletTxes = std::vector<CWalletTx>(walletTxes.begin(), walletTxes.begin() + MAX_AMOUNT_LOADED_RECORDS);
-                txesSize = walletTxes.size();
-            };
 
             // Simple way to get the processors count
             std::size_t threadsCount = (QThreadPool::globalInstance()->maxThreadCount() / 2 ) + 1;
@@ -174,7 +152,7 @@ public:
     static bool HasZcTxesIfNeeded(const TransactionRecord& record) {
         return (record.type == TransactionRecord::ZerocoinMint ||
                 record.type == TransactionRecord::ZerocoinSpend ||
-                record.type == TransactionRecord::ZerocoinSpend_Change_zPiv ||
+                record.type == TransactionRecord::ZerocoinSpend_Change_zCredit ||
                 record.type == TransactionRecord::ZerocoinSpend_FromMe);
     }
 
@@ -188,9 +166,9 @@ public:
         qDebug() << "TransactionTablePriv::updateWallet : " + QString::fromStdString(hash.ToString()) + " " + QString::number(status);
 
         // Find bounds of this transaction in model
-        QList<TransactionRecord>::iterator lower = std::lower_bound(
+        QList<TransactionRecord>::iterator lower = qLowerBound(
             cachedWallet.begin(), cachedWallet.end(), hash, TxLessThan());
-        QList<TransactionRecord>::iterator upper = std::upper_bound(
+        QList<TransactionRecord>::iterator upper = qUpperBound(
             cachedWallet.begin(), cachedWallet.end(), hash, TxLessThan());
         int lowerIndex = (lower - cachedWallet.begin());
         int upperIndex = (upper - cachedWallet.begin());
@@ -314,7 +292,7 @@ TransactionTableModel::TransactionTableModel(CWallet* wallet, WalletModel* paren
     columns << QString() << QString() << tr("Date") << tr("Type") << tr("Address") << BitcoinUnits::getAmountColumnTitle(walletModel->getOptionsModel()->getDisplayUnit());
     priv->refreshWallet();
 
-    connect(walletModel->getOptionsModel(), &OptionsModel::displayUnitChanged, this, &TransactionTableModel::updateDisplayUnit);
+    connect(walletModel->getOptionsModel(), SIGNAL(displayUnitChanged(int)), this, SLOT(updateDisplayUnit()));
 
     subscribeToCoreSignals();
 }
@@ -329,7 +307,7 @@ TransactionTableModel::~TransactionTableModel()
 void TransactionTableModel::updateAmountColumnTitle()
 {
     columns[Amount] = BitcoinUnits::getAmountColumnTitle(walletModel->getOptionsModel()->getDisplayUnit());
-    Q_EMIT headerDataChanged(Qt::Horizontal, Amount, Amount);
+    emit headerDataChanged(Qt::Horizontal, Amount, Amount);
 }
 
 void TransactionTableModel::updateTransaction(const QString& hash, int status, bool showTransaction)
@@ -341,7 +319,7 @@ void TransactionTableModel::updateTransaction(const QString& hash, int status, b
     priv->updateWallet(updated, status, showTransaction, rec);
 
     if (!rec.isNull())
-        Q_EMIT txArrived(hash, rec.isCoinStake(), rec.isAnyColdStakingType());
+        emit txArrived(hash, rec.isCoinStake(), rec.isAnyColdStakingType());
 }
 
 void TransactionTableModel::updateConfirmations()
@@ -350,8 +328,8 @@ void TransactionTableModel::updateConfirmations()
     // Invalidate status (number of confirmations) and (possibly) description
     //  for all rows. Qt is smart enough to only actually request the data for the
     //  visible rows.
-    Q_EMIT dataChanged(index(0, Status), index(priv->size() - 1, Status));
-    Q_EMIT dataChanged(index(0, ToAddress), index(priv->size() - 1, ToAddress));
+    emit dataChanged(index(0, Status), index(priv->size() - 1, Status));
+    emit dataChanged(index(0, ToAddress), index(priv->size() - 1, ToAddress));
 }
 
 int TransactionTableModel::rowCount(const QModelIndex& parent) const
@@ -447,38 +425,46 @@ QString TransactionTableModel::formatTxType(const TransactionRecord* wtx) const
         return tr("Masternode Reward");
     case TransactionRecord::RecvFromOther:
         return tr("Received from");
+    case TransactionRecord::RecvWithObfuscation:
+        return tr("Received via Obfuscation");
     case TransactionRecord::SendToAddress:
     case TransactionRecord::SendToOther:
         return tr("Sent to");
     case TransactionRecord::SendToSelf:
         return tr("Payment to yourself");
     case TransactionRecord::StakeMint:
-        return tr("%1 Stake").arg(CURRENCY_UNIT.c_str());
-    case TransactionRecord::StakeZPIV:
-        return tr("z%1 Stake").arg(CURRENCY_UNIT.c_str());
+        return tr("CREDIT Stake");
+    case TransactionRecord::StakeZCREDIT:
+        return tr("zCREDIT Stake");
     case TransactionRecord::StakeDelegated:
-        return tr("%1 Cold Stake").arg(CURRENCY_UNIT.c_str());
+        return tr("CREDIT Cold Stake");
     case TransactionRecord::StakeHot:
-        return tr("%1 Stake on behalf of").arg(CURRENCY_UNIT.c_str());
+        return tr("CREDIT Stake in behalf of");
     case TransactionRecord::P2CSDelegationSent:
-    case TransactionRecord::P2CSDelegationSentOwner:
     case TransactionRecord::P2CSDelegation:
         return tr("Stake delegation");
-    case TransactionRecord::P2CSUnlockOwner:
-    case TransactionRecord::P2CSUnlockStaker:
-        return tr("Stake delegation spent by");
     case TransactionRecord::Generated:
         return tr("Mined");
+    case TransactionRecord::ObfuscationDenominate:
+        return tr("Obfuscation Denominate");
+    case TransactionRecord::ObfuscationCollateralPayment:
+        return tr("Obfuscation Collateral Payment");
+    case TransactionRecord::ObfuscationMakeCollaterals:
+        return tr("Obfuscation Make Collateral Inputs");
+    case TransactionRecord::ObfuscationCreateDenominations:
+        return tr("Obfuscation Create Denominations");
+    case TransactionRecord::Obfuscated:
+        return tr("Obfuscated");
     case TransactionRecord::ZerocoinMint:
-        return tr("Converted %1 to z%1").arg(CURRENCY_UNIT.c_str());
+        return tr("Converted CREDIT to zCREDIT");
     case TransactionRecord::ZerocoinSpend:
-        return tr("Spent z%1").arg(CURRENCY_UNIT.c_str());
+        return tr("Spent zCREDIT");
     case TransactionRecord::RecvFromZerocoinSpend:
-        return tr("Received %1 from z%1").arg(CURRENCY_UNIT.c_str());
-    case TransactionRecord::ZerocoinSpend_Change_zPiv:
-        return tr("Minted Change as z%1 from z%1 Spend").arg(CURRENCY_UNIT.c_str());
+        return tr("Received CREDIT from zCREDIT");
+    case TransactionRecord::ZerocoinSpend_Change_zCredit:
+        return tr("Minted Change as zCREDIT from zCREDIT Spend");
     case TransactionRecord::ZerocoinSpend_FromMe:
-        return tr("Converted z%1 to %1").arg(CURRENCY_UNIT.c_str());
+        return tr("Converted zCREDIT to CREDIT");
     default:
         return QString();
     }
@@ -489,9 +475,10 @@ QVariant TransactionTableModel::txAddressDecoration(const TransactionRecord* wtx
     switch (wtx->type) {
     case TransactionRecord::Generated:
     case TransactionRecord::StakeMint:
-    case TransactionRecord::StakeZPIV:
+    case TransactionRecord::StakeZCREDIT:
     case TransactionRecord::MNReward:
         return QIcon(":/icons/tx_mined");
+    case TransactionRecord::RecvWithObfuscation:
     case TransactionRecord::RecvWithAddress:
     case TransactionRecord::RecvFromOther:
     case TransactionRecord::RecvFromZerocoinSpend:
@@ -518,6 +505,7 @@ QString TransactionTableModel::formatTxToAddress(const TransactionRecord* wtx, b
         return QString::fromStdString(wtx->address) + watchAddress;
     case TransactionRecord::RecvWithAddress:
     case TransactionRecord::MNReward:
+    case TransactionRecord::RecvWithObfuscation:
     case TransactionRecord::SendToAddress:
     case TransactionRecord::Generated:
     case TransactionRecord::StakeMint:
@@ -525,17 +513,16 @@ QString TransactionTableModel::formatTxToAddress(const TransactionRecord* wtx, b
     case TransactionRecord::ZerocoinSpend_FromMe:
     case TransactionRecord::RecvFromZerocoinSpend:
         return lookupAddress(wtx->address, tooltip);
+    case TransactionRecord::Obfuscated:
+        return lookupAddress(wtx->address, tooltip) + watchAddress;
     case TransactionRecord::SendToOther:
         return QString::fromStdString(wtx->address) + watchAddress;
     case TransactionRecord::ZerocoinMint:
-    case TransactionRecord::ZerocoinSpend_Change_zPiv:
-    case TransactionRecord::StakeZPIV:
+    case TransactionRecord::ZerocoinSpend_Change_zCredit:
+    case TransactionRecord::StakeZCREDIT:
         return tr("Anonymous");
     case TransactionRecord::P2CSDelegation:
     case TransactionRecord::P2CSDelegationSent:
-    case TransactionRecord::P2CSDelegationSentOwner:
-    case TransactionRecord::P2CSUnlockOwner:
-    case TransactionRecord::P2CSUnlockStaker:
     case TransactionRecord::StakeDelegated:
     case TransactionRecord::StakeHot:
     case TransactionRecord::SendToSelf: {
@@ -689,7 +676,7 @@ QVariant TransactionTableModel::data(const QModelIndex& index, int role) const
     case Qt::ForegroundRole:
         // Minted
         if (rec->type == TransactionRecord::Generated || rec->type == TransactionRecord::StakeMint ||
-                rec->type == TransactionRecord::StakeZPIV || rec->type == TransactionRecord::MNReward) {
+                rec->type == TransactionRecord::StakeZCREDIT || rec->type == TransactionRecord::MNReward) {
             if (rec->status.status == TransactionStatus::Conflicted || rec->status.status == TransactionStatus::NotAccepted)
                 return COLOR_ORPHAN;
             else
@@ -778,7 +765,7 @@ QModelIndex TransactionTableModel::index(int row, int column, const QModelIndex&
     Q_UNUSED(parent);
     TransactionRecord* data = priv->index(row);
     if (data) {
-        return createIndex(row, column, data);
+        return createIndex(row, column, priv->index(row));
     }
     return QModelIndex();
 }
@@ -787,7 +774,7 @@ void TransactionTableModel::updateDisplayUnit()
 {
     // emit dataChanged to update Amount column with the current unit
     updateAmountColumnTitle();
-    Q_EMIT dataChanged(index(0, Amount), index(priv->size() - 1, Amount));
+    emit dataChanged(index(0, Amount), index(priv->size() - 1, Amount));
 }
 
 // queue notifications to show a non freezing progress dialog e.g. for rescan

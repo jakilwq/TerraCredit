@@ -1,16 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
-
-# Search for and use ccache if available to speed up build times
-find_program(CCACHE_PROGRAM ccache)
-if(CCACHE_PROGRAM)
-    message(STATUS "Found ccache: ${CCACHE_PROGRAM}")
-    set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE "${CCACHE_PROGRAM}")
-    # Set up wrapper scripts
-    set(C_LAUNCHER   "${CCACHE_PROGRAM}")
-    set(CXX_LAUNCHER "${CCACHE_PROGRAM}")
-endif()
-
-project(PIVX)
+project(TERRACREDIT)
 
 set(BDB_VER "4.8.30")
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/contrib/cmake")
@@ -26,11 +15,11 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     message(STATUS "Compiling on macOS")
     set(ENV{target} "Mac")
     list(APPEND CMAKE_PREFIX_PATH /usr/local/opt/qt5)
-    list(APPEND CMAKE_PREFIX_PATH /usr/local/opt/openssl@1.1)
+    list(APPEND CMAKE_PREFIX_PATH /usr/local/opt/openssl)
     list(APPEND CMAKE_PREFIX_PATH /usr/local/Cellar/berkeley-db@4)
-    #set(OPENSSL_ROOT_DIR "/usr/local/opt/openssl@1.1/")
-    #set(ENV{CPPFLAGS} "-I${OPENSSL_ROOT_DIR}/include")
-    #set(ENV{LDFLAGS} "-L${OPENSSL_ROOT_DIR}/lib")
+    set(OPENSSL_ROOT_DIR "/usr/local/opt/openssl/")
+    set(ENV{CPPFLAGS} "-I${OPENSSL_ROOT_DIR}/include")
+    set(ENV{LDFLAGS} "-L${OPENSSL_ROOT_DIR}/lib")
     set(BerkeleyDB_ROOT_DIR "/usr/local/Cellar/berkeley-db@4/${BDB_VER}/")
     set(Boost_USE_MULTITHREADED ON)
     set(Boost_NO_BOOST_CMAKE ON)
@@ -42,7 +31,7 @@ elseif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
         message(STATUS "Compiling on WSL")
         set(ENV{DISPLAY} ":0")
         set(ENV{LIBGL_ALWAYS_INDIRECT} 1)
-        set(CMAKE_RUNTIME_OUTPUT_DIRECTORY /home/$ENV{USER}/pivx-run)
+        set(CMAKE_RUNTIME_OUTPUT_DIRECTORY /home/$ENV{USER}/terracredit-run)
         message(WARNING "WSL Runtime support requires VcXsrv to be installed and running")
     else()
         message(STATUS "Compiling on Linux")
@@ -96,8 +85,8 @@ else()
     )
 endif()
 
-# run configure if pivx_config.h doesn't exist
-if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/src/config/pivx-config.h")
+# run configure if terracredit_config.h doesn't exist
+if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/src/config/terracredit-config.h")
 else()
     execute_process(
         COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/configure ${CONFIGSITE} ${BDB_CONFIGURE_FLAGS} ${BIGNUM_CONFIGURE_FLAGS} ${SSL_CONFIGURE_FLAGS}
@@ -270,8 +259,6 @@ file(GLOB ZMQ_HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/src/zmq/*.h)
 file(GLOB SCRIPT_HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/src/script/*.h)
 file(GLOB RPC_HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/src/rpc/*.h)
 file(GLOB COMPAT_HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/src/compat/*.h)
-file(GLOB CONSENSUS_HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/src/consensus/*.h)
-file(GLOB CTAES_HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/src/crypto/ctaes/*.h)
 
 source_group("BitcoinHeaders" FILES
         ${HEADERS}
@@ -281,13 +268,12 @@ source_group("BitcoinHeaders" FILES
         ${SCRIPT_HEADERS}
         ${RPC_HEADERS}
         ${COMPAT_HEADERS}
-        ${CONSENSUS_HEADERS}
-        ${CTAES_HEADERS}
         ./src/support/cleanse.h
         )
 
 set(SERVER_SOURCES
         ./src/addrman.cpp
+        ./src/alert.cpp
         ./src/bloom.cpp
         ./src/blocksignature.cpp
         ./src/chain.cpp
@@ -295,13 +281,12 @@ set(SERVER_SOURCES
         ./src/httprpc.cpp
         ./src/httpserver.cpp
         ./src/init.cpp
-        ./src/dbwrapper.cpp
+        ./src/leveldbwrapper.cpp
         ./src/main.cpp
         ./src/merkleblock.cpp
         ./src/miner.cpp
         ./src/net.cpp
         ./src/noui.cpp
-        ./src/policy/fees.cpp
         ./src/pow.cpp
         ./src/rest.cpp
         ./src/rpc/blockchain.cpp
@@ -319,7 +304,7 @@ set(SERVER_SOURCES
         ./src/txdb.cpp
         ./src/txmempool.cpp
         ./src/validationinterface.cpp
-        ./src/zpivchain.cpp
+        ./src/zcreditchain.cpp
         )
 add_library(SERVER_A STATIC ${BitcoinHeaders} ${SERVER_SOURCES})
 if(MINIUPNP_FOUND)
@@ -347,6 +332,8 @@ set(WALLET_SOURCES
         ./src/activemasternode.cpp
         ./src/bip38.cpp
         ./src/denomination_functions.cpp
+        ./src/obfuscation.cpp
+        ./src/obfuscation-relay.cpp
         ./src/wallet/db.cpp
         ./src/addressbook.cpp
         ./src/crypter.cpp
@@ -358,24 +345,21 @@ set(WALLET_SOURCES
         ./src/masternodeconfig.cpp
         ./src/masternodeman.cpp
         ./src/messagesigner.cpp
-        ./src/zpiv/mintpool.cpp
-        ./src/wallet/hdchain.cpp
+        ./src/zcredit/mintpool.cpp
         ./src/wallet/rpcdump.cpp
-        ./src/zpiv/deterministicmint.cpp
-        ./src/zpiv/zerocoin.cpp
-        ./src/wallet/scriptpubkeyman.cpp
+        ./src/zcredit/deterministicmint.cpp
+        ./src/zcredit/zerocoin.cpp
         ./src/wallet/rpcwallet.cpp
         ./src/kernel.cpp
-        ./src/legacy/stakemodifier.cpp
         ./src/wallet/wallet.cpp
-        ./src/wallet/wallet_zerocoin.cpp
         ./src/wallet/wallet_ismine.cpp
         ./src/wallet/walletdb.cpp
-        ./src/zpiv/zpivwallet.cpp
-        ./src/zpiv/zpivtracker.cpp
-        ./src/zpiv/zpivmodule.cpp
-        ./src/zpiv/zpos.cpp
+        ./src/zcredit/zcreditwallet.cpp
+        ./src/zcredit/zcredittracker.cpp
+        ./src/zcredit/zcreditmodule.cpp
         ./src/stakeinput.cpp
+        ./src/genwit.cpp
+        ./src/lightzcreditthread.cpp
         )
 add_library(WALLET_A STATIC ${BitcoinHeaders} ${WALLET_SOURCES})
 target_include_directories(WALLET_A PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src
@@ -387,7 +371,6 @@ target_include_directories(WALLET_A PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src
         )
 
 set(BITCOIN_CRYPTO_SOURCES
-        ./src/crypto/aes.cpp
         ./src/crypto/sha1.cpp
         ./src/crypto/sha256.cpp
         ./src/crypto/sha512.cpp
@@ -427,6 +410,7 @@ target_include_directories(BITCOIN_CRYPTO_A PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/s
 
 set(ZEROCOIN_SOURCES
         ./src/libzerocoin/Accumulator.h
+        ./src/libzerocoin/AccumulatorProofOfKnowledge.h
         ./src/libzerocoin/bignum.h
         ./src/libzerocoin/bignum.cpp
         ./src/libzerocoin/Coin.h
@@ -436,15 +420,19 @@ set(ZEROCOIN_SOURCES
         ./src/libzerocoin/Denominations.h
         ./src/libzerocoin/ParamGeneration.h
         ./src/libzerocoin/Params.h
+        ./src/libzerocoin/SerialNumberSignatureOfKnowledge.h
         ./src/libzerocoin/SpendType.h
         ./src/libzerocoin/ZerocoinDefines.h
         ./src/libzerocoin/Accumulator.cpp
+        ./src/libzerocoin/AccumulatorProofOfKnowledge.cpp
         ./src/libzerocoin/Coin.cpp
         ./src/libzerocoin/CoinRandomnessSchnorrSignature.cpp
         ./src/libzerocoin/Denominations.cpp
         ./src/libzerocoin/CoinSpend.cpp
+        ./src/libzerocoin/Commitment.cpp
         ./src/libzerocoin/ParamGeneration.cpp
         ./src/libzerocoin/Params.cpp
+        ./src/libzerocoin/SerialNumberSignatureOfKnowledge.cpp
         )
 if(GMP_FOUND)
     list(APPEND ZEROCOIN_SOURCES ./src/libzerocoin/bignum_gmp.cpp)
@@ -457,21 +445,22 @@ target_include_directories(ZEROCOIN_A PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src
         )
 
 set(COMMON_SOURCES
+        ./src/zcredit/accumulators.cpp
+        ./src/zcredit/accumulatorcheckpoints.cpp
+        ./src/zcredit/accumulatormap.cpp
+        ./src/zcredit/witness.cpp
         ./src/allocators.cpp
         ./src/amount.cpp
         ./src/base58.cpp
         ./src/bip38.cpp
         ./src/chainparams.cpp
         ./src/coins.cpp
-        ./src/key_io.cpp
         ./src/compressor.cpp
         ./src/consensus/merkle.cpp
-        ./src/consensus/tx_verify.cpp
-        ./src/consensus/zerocoin_verify.cpp
         ./src/primitives/block.cpp
-        ./src/zpiv/deterministicmint.cpp
+        ./src/zcredit/deterministicmint.cpp
         ./src/primitives/transaction.cpp
-        ./src/zpiv/zerocoin.cpp
+        ./src/zcredit/zerocoin.cpp
         ./src/core_read.cpp
         ./src/core_write.cpp
         ./src/hash.cpp
@@ -506,15 +495,10 @@ set(UTIL_SOURCES
         ./src/compat/glibcxx_sanity.cpp
         ./src/chainparamsbase.cpp
         ./src/clientversion.cpp
-        ./src/fs.cpp
-        ./src/logging.cpp
         ./src/random.cpp
         ./src/rpc/protocol.cpp
         ./src/sync.cpp
-        ./src/blob_uint256.cpp
-        ./src/arith_uint256.cpp
         ./src/uint256.cpp
-        ./src/util/threadnames.cpp
         ./src/util.cpp
         ./src/utilstrencodings.cpp
         ./src/utilmoneystr.cpp
@@ -538,13 +522,13 @@ link_directories(
         ${CMAKE_SOURCE_DIR}/src/secp256k1/.libs
         )
 
-set(pivx-cli_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/pivx-cli.cpp)
+set(terracredit-cli_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/terracredit-cli.cpp)
 if($ENV{target} MATCHES "Windows")
-    list(APPEND pivx-cli_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/pivx-cli-res.rc)
+    list(APPEND terracredit-cli_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/terracredit-cli-res.rc)
 endif()
-add_executable(pivx-cli ${pivx-cli_SOURCES})
-add_dependencies(pivx-cli libunivalue)
-target_link_libraries(pivx-cli
+add_executable(terracredit-cli ${terracredit-cli_SOURCES})
+add_dependencies(terracredit-cli libunivalue)
+target_link_libraries(terracredit-cli
         CLI_A
         univalue
         UTIL_A
@@ -552,16 +536,16 @@ target_link_libraries(pivx-cli
         ${Boost_LIBRARIES} ${OPENSSL_LIBRARIES} ${LIBEVENT_LIB}
         )
 if($ENV{target} MATCHES "Windows")
-    target_link_libraries(pivx-cli ${WINDOWS_LDADD})
+    target_link_libraries(terracredit-cli ${WINDOWS_LDADD})
 endif()
 
-set(pivx-tx_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/pivx-tx.cpp)
+set(terracredit-tx_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/terracredit-tx.cpp)
 if($ENV{target} MATCHES "Windows")
-    list(APPEND pivx-tx_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/pivx-tx-res.rc)
+    list(APPEND terracredit-tx_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/terracredit-tx-res.rc)
 endif()
-add_executable(pivx-tx ${pivx-tx_SOURCES})
-add_dependencies(pivx-tx libunivalue libsecp256k1)
-target_link_libraries(pivx-tx
+add_executable(terracredit-tx ${terracredit-tx_SOURCES})
+add_dependencies(terracredit-tx libunivalue libsecp256k1)
+target_link_libraries(terracredit-tx
         univalue
         COMMON_A
         ZEROCOIN_A
@@ -571,26 +555,26 @@ target_link_libraries(pivx-tx
         ${Boost_LIBRARIES} ${OPENSSL_LIBRARIES} ${LIBEVENT_LIB}
         )
 if($ENV{target} MATCHES "Windows")
-    target_link_libraries(pivx-tx ${WINDOWS_LDADD})
+    target_link_libraries(terracredit-tx ${WINDOWS_LDADD})
 endif()
 if(GMP_FOUND)
-    target_link_libraries(pivx-tx ${GMP_LIBRARY})
+    target_link_libraries(terracredit-tx ${GMP_LIBRARY})
 endif()
 
 link_directories(${CMAKE_BINARY_DIR})
 
-set(pivxd_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/pivxd.cpp)
+set(terracreditd_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/terracreditd.cpp)
 if($ENV{target} MATCHES "Windows")
-    list(APPEND pivxd_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/pivxd-res.rc)
+    list(APPEND terracreditd_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/terracreditd-res.rc)
 endif()
-add_executable(pivxd ${pivxd_SOURCES} ${BitcoinHeaders})
-add_dependencies(pivxd libunivalue libsecp256k1 leveldb leveldb_sse42 memenv)
-target_include_directories(pivxd PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src
+add_executable(terracreditd ${terracreditd_SOURCES} ${BitcoinHeaders})
+add_dependencies(terracreditd libunivalue libsecp256k1 leveldb leveldb_sse42 memenv)
+target_include_directories(terracreditd PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src
         ${CMAKE_CURRENT_SOURCE_DIR}/src/leveldb
         ${CMAKE_CURRENT_SOURCE_DIR}/src/leveldb/include
         ${CMAKE_CURRENT_SOURCE_DIR}/src/leveldb/helpers/memenv
         ${LIBEVENT_INCLUDE_DIR})
-target_link_libraries(pivxd
+target_link_libraries(terracreditd
         pthread
         SERVER_A
         WALLET_A
@@ -607,22 +591,22 @@ target_link_libraries(pivxd
         )
 if($ENV{target} MATCHES "Windows")
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wstack-protector -fstack-protector-all -fPIE -pipe -O2 -pthread -Wl,--dynamicbase -Wl,--nxcompat -Wl,--high-entropy-va -pie --static")
-    target_link_libraries(pivxd ${WINDOWS_LDADD})
+    target_link_libraries(terracreditd ${WINDOWS_LDADD})
 endif()
 if(GMP_FOUND)
-    target_link_libraries(pivxd ${GMP_LIBRARY})
-    target_include_directories(pivxd PUBLIC ${GMP_INCLUDE_DIR})
+    target_link_libraries(terracreditd ${GMP_LIBRARY})
+    target_include_directories(terracreditd PUBLIC ${GMP_INCLUDE_DIR})
 endif()
 if(ZMQ_FOUND)
-    target_link_libraries(pivxd ZMQ_A ${ZMQ_LIB})
-    target_include_directories(pivxd PUBLIC ${ZMQ_INCLUDE_DIR})
+    target_link_libraries(terracreditd ZMQ_A ${ZMQ_LIB})
+    target_include_directories(terracreditd PUBLIC ${ZMQ_INCLUDE_DIR})
 endif()
 if(MINIUPNP_FOUND)
-    target_compile_definitions(pivxd PUBLIC "-DSTATICLIB -DMINIUPNP_STATICLIB")
-    target_link_libraries(pivxd ${MINIUPNP_LIBRARY})
-    target_include_directories(pivxd PUBLIC ${MINIUPNP_INCLUDE_DIR})
+    target_compile_definitions(terracreditd PUBLIC "-DSTATICLIB -DMINIUPNP_STATICLIB")
+    target_link_libraries(terracreditd ${MINIUPNP_LIBRARY})
+    target_include_directories(terracreditd PUBLIC ${MINIUPNP_INCLUDE_DIR})
 endif()
 
-target_link_libraries(pivxd -lpthread)
+target_link_libraries(terracreditd -lpthread)
 
 add_subdirectory(src/qt)

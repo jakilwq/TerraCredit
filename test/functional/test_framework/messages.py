@@ -33,7 +33,6 @@ MY_RELAY = 1 # from version 70001 onwards, fRelay should be appended to version 
 
 MAX_INV_SZ = 50000
 MAX_BLOCK_BASE_SIZE = 1000000
-CURRENT_BLK_VERSION = 7
 
 COIN = 100000000 # 1 btc in satoshis
 
@@ -289,20 +288,9 @@ class COutPoint():
         r += struct.pack("<I", self.n)
         return r
 
-    def serialize_uniqueness(self):
-        r = b""
-        r += struct.pack("<I", self.n)
-        r += ser_uint256(self.hash)
-        return r
-
-    def deserialize_uniqueness(self, f):
-        self.n = struct.unpack("<I", f.read(4))[0]
-        self.hash = deser_uint256(f)
-
     def __repr__(self):
         return "COutPoint(hash=%064x n=%i)" % (self.hash, self.n)
 
-NullOutPoint = COutPoint(0, 0xffffffff)
 
 class CTxIn():
     def __init__(self, outpoint=None, scriptSig=b"", nSequence=0):
@@ -330,9 +318,6 @@ class CTxIn():
         return "CTxIn(prevout=%s scriptSig=%s nSequence=%i)" \
             % (repr(self.prevout), bytes_to_hex_str(self.scriptSig),
                self.nSequence)
-
-    def is_zerocoinspend(self):
-        return bytes_to_hex_str(self.scriptSig)[:2] == "c2"
 
 
 class CTxOut():
@@ -422,28 +407,6 @@ class CTransaction():
                 return False
         return True
 
-    def is_coinbase(self):
-        return (
-                len(self.vin) == 1 and
-                self.vin[0].prevout == NullOutPoint and
-                (not self.vin[0].is_zerocoinspend())
-        )
-
-    def is_coinstake(self):
-        return (
-                len(self.vin) == 1 and
-                len(self.vout) >= 2 and
-                self.vout[0] == CTxOut()
-        )
-
-    def from_hex(self, hexstring):
-        f = BytesIO(hex_str_to_bytes(hexstring))
-        self.deserialize(f)
-
-    def spends(self, outpoint):
-        return len([x for x in self.vin if
-                    x.prevout.hash == outpoint.hash and x.prevout.n == outpoint.n]) > 0
-
     def __repr__(self):
         return "CTransaction(nVersion=%i vin=%s vout=%s nLockTime=%i)" \
             % (self.nVersion, repr(self.vin), repr(self.vout), self.nLockTime)
@@ -460,17 +423,19 @@ class CBlockHeader():
             self.nTime = header.nTime
             self.nBits = header.nBits
             self.nNonce = header.nNonce
+            self.nAccumulatorCheckpoint = header.nAccumulatorCheckpoint
             self.sha256 = header.sha256
             self.hash = header.hash
             self.calc_sha256()
 
     def set_null(self):
-        self.nVersion = CURRENT_BLK_VERSION
+        self.nVersion = 4
         self.hashPrevBlock = 0
         self.hashMerkleRoot = 0
         self.nTime = 0
         self.nBits = 0
         self.nNonce = 0
+        self.nAccumulatorCheckpoint = 0
         self.sha256 = None
         self.hash = None
 
@@ -481,6 +446,7 @@ class CBlockHeader():
         self.nTime = struct.unpack("<I", f.read(4))[0]
         self.nBits = struct.unpack("<I", f.read(4))[0]
         self.nNonce = struct.unpack("<I", f.read(4))[0]
+        self.nAccumulatorCheckpoint = deser_uint256(f)
         self.sha256 = None
         self.hash = None
 
@@ -492,6 +458,7 @@ class CBlockHeader():
         r += struct.pack("<I", self.nTime)
         r += struct.pack("<I", self.nBits)
         r += struct.pack("<I", self.nNonce)
+        r += ser_uint256(self.nAccumulatorCheckpoint)
         return r
 
     def calc_sha256(self):
@@ -503,6 +470,7 @@ class CBlockHeader():
             r += struct.pack("<I", self.nTime)
             r += struct.pack("<I", self.nBits)
             r += struct.pack("<I", self.nNonce)
+            r += ser_uint256(self.nAccumulatorCheckpoint)
             self.sha256 = uint256_from_str(hash256(r))
             self.hash = encode(hash256(r)[::-1], 'hex_codec').decode('ascii')
 
@@ -511,24 +479,36 @@ class CBlockHeader():
         self.calc_sha256()
         return self.sha256
 
-    # PIVX
-    def solve_stake(self, stakeInputs, prevModifier):
+    # CREDIT Uniqueness
+    def get_uniqueness(self, prevout):
+        r = b""
+        r += struct.pack("<I", prevout.n)
+        r += ser_uint256(prevout.hash)
+        return r
+
+    def solve_stake(self, prevouts, isModifierV2=False):
         target0 = uint256_from_compact(self.nBits)
         loop = True
         while loop:
-            for uniqueness in stakeInputs:
-                nvalue, _, prevTime = stakeInputs[uniqueness]
+            for prevout in prevouts:
+                nvalue, txBlockTime, hashStake = prevouts[prevout]
                 target = int(target0 * nvalue / 100) % 2**256
                 data = b""
-                # always modifier V2 (256 bits) on regtest
-                data += ser_uint256(prevModifier)
-                data += struct.pack("<I", prevTime)
-                # prevout is CStake uniqueness
-                data += uniqueness
+                if isModifierV2:
+                    data += ser_uint256(0)
+                else:
+                    data += ser_uint64(0)
+                #data += ser_uint64(stakeModifier)
+                data += struct.pack("<I", txBlockTime)
+                # prevout for zPoS is serial hashes hex strings
+                if isinstance(prevout, COutPoint):
+                    data += self.get_uniqueness(prevout)
+                else:
+                    data += ser_uint256(uint256_from_str(bytes.fromhex(hashStake)[::-1]))
                 data += struct.pack("<I", self.nTime)
                 posHash = uint256_from_str(hash256(data))
                 if posHash <= target:
-                    self.prevoutStake = uniqueness
+                    self.prevoutStake = prevout
                     loop = False
                     break
             if loop:
@@ -545,12 +525,10 @@ class CBlock(CBlockHeader):
     def __init__(self, header=None):
         super(CBlock, self).__init__(header)
         self.vtx = []
-        self.sig_key = None     # not serialized / used only to re_sign
 
     def deserialize(self, f):
         super(CBlock, self).deserialize(f)
         self.vtx = deser_vector(f, CTransaction)
-        self.sig_key = None
 
     def serialize(self, with_witness=False):
         r = b""
@@ -619,15 +597,9 @@ class CBlock(CBlockHeader):
         data += struct.pack("<I", self.nTime)
         data += struct.pack("<I", self.nBits)
         data += struct.pack("<I", self.nNonce)
+        data += ser_uint256(self.nAccumulatorCheckpoint)
         sha256NoSig = hash256(data)
         self.vchBlockSig = key.sign(sha256NoSig, low_s=low_s)
-        self.sig_key = key
-        self.low_s = low_s
-
-    def re_sign_block(self):
-        if self.sig_key == None:
-            raise Exception("Unable to re-sign block. Key Not present, use 'sign_block' first.")
-        return self.sign_block(self.sig_key, self.low_s)
 
     def __repr__(self):
         return "CBlock(nVersion=%i hashPrevBlock=%064x hashMerkleRoot=%064x nTime=%s nBits=%08x nNonce=%08x vtx=%s)" \

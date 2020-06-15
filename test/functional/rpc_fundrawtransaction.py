@@ -3,16 +3,8 @@
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-from test_framework.test_framework import PivxTestFramework
-from test_framework.util import (
-    assert_equal,
-    assert_fee_amount,
-    assert_greater_than,
-    count_bytes,
-    connect_nodes,
-    Decimal,
-    JSONRPCException,
-)
+from test_framework.test_framework import BitcoinTestFramework
+from test_framework.util import *
 
 
 def get_unspent(listunspent, amount):
@@ -22,7 +14,7 @@ def get_unspent(listunspent, amount):
     raise AssertionError('Could not find unspent with amount={}'.format(amount))
 
 
-class RawTransactionsTest(PivxTestFramework):
+class RawTransactionsTest(BitcoinTestFramework):
 
     def __init__(self):
         super().__init__()
@@ -30,12 +22,12 @@ class RawTransactionsTest(PivxTestFramework):
         self.num_nodes = 4
 
     def setup_network(self, split=False):
-        self.nodes = self.start_nodes()
+        self.nodes = start_nodes(self.num_nodes, self.options.tmpdir)
 
-        connect_nodes(self.nodes[0], 1)
-        connect_nodes(self.nodes[1], 2)
-        connect_nodes(self.nodes[0], 2)
-        connect_nodes(self.nodes[0], 3)
+        connect_nodes_bi(self.nodes,0,1)
+        connect_nodes_bi(self.nodes,1,2)
+        connect_nodes_bi(self.nodes,0,2)
+        connect_nodes_bi(self.nodes,0,3)
 
         self.is_network_split=False
         self.sync_all()
@@ -209,9 +201,9 @@ class RawTransactionsTest(PivxTestFramework):
 
         try:
             self.nodes[2].fundrawtransaction(rawtx, {'changeAddress': 'foobar'})
-            raise AssertionError("Accepted invalid pivx address")
+            raise AssertionError("Accepted invalid terracredit address")
         except JSONRPCException as e:
-            assert("changeAddress must be a valid pivx address" in e.error['message'])
+            assert("changeAddress must be a valid terracredit address" in e.error['message'])
 
 
         ############################################################
@@ -477,18 +469,18 @@ class RawTransactionsTest(PivxTestFramework):
         # locked wallet test
         self.nodes[1].encryptwallet("test")
         self.nodes.pop(1)
-        self.stop_nodes()
+        stop_nodes(self.nodes)
 
-        self.nodes = self.start_nodes()
+        self.nodes = start_nodes(self.num_nodes, self.options.tmpdir)
         # This test is not meant to test fee estimation and we'd like
         # to be sure all txs are sent at a consistent desired feerate
         for node in self.nodes:
             node.settxfee(min_relay_tx_fee)
 
-        connect_nodes(self.nodes[0], 1)
-        connect_nodes(self.nodes[1], 2)
-        connect_nodes(self.nodes[0], 2)
-        connect_nodes(self.nodes[0], 3)
+        connect_nodes_bi(self.nodes,0,1)
+        connect_nodes_bi(self.nodes,1,2)
+        connect_nodes_bi(self.nodes,0,2)
+        connect_nodes_bi(self.nodes,0,3)
         self.is_network_split=False
         self.sync_all()
 

@@ -1,10 +1,10 @@
 // Copyright (c) 2011-2013 The Bitcoin developers
-// Copyright (c) 2017-2020 The PIVX developers
+// Copyright (c) 2017-2019 The TERRACREDIT developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #if defined(HAVE_CONFIG_H)
-#include "config/pivx-config.h"
+#include "config/terracredit-config.h"
 #endif
 
 #include "optionsdialog.h"
@@ -12,6 +12,7 @@
 
 #include "bitcoinunits.h"
 #include "guiutil.h"
+#include "obfuscation.h"
 #include "optionsmodel.h"
 
 #include "main.h" // for MAX_SCRIPTCHECK_THREADS
@@ -43,7 +44,7 @@ OptionsDialog::OptionsDialog(QWidget* parent, bool enableWallet) : QDialog(paren
     /* Main elements init */
     ui->databaseCache->setMinimum(nMinDbCache);
     ui->databaseCache->setMaximum(nMaxDbCache);
-    ui->threadsScriptVerif->setMinimum(-GetNumCores());
+    ui->threadsScriptVerif->setMinimum(-(int)boost::thread::hardware_concurrency());
     ui->threadsScriptVerif->setMaximum(MAX_SCRIPTCHECK_THREADS);
 
     /* Network elements init */
@@ -55,8 +56,8 @@ OptionsDialog::OptionsDialog(QWidget* parent, bool enableWallet) : QDialog(paren
     ui->proxyPort->setEnabled(false);
     ui->proxyPort->setValidator(new QIntValidator(1, 65535, this));
 
-    connect(ui->connectSocks, &QCheckBox::toggled, ui->proxyIp, &QWidget::setEnabled);
-    connect(ui->connectSocks, &QCheckBox::toggled, ui->proxyPort, &QWidget::setEnabled);
+    connect(ui->connectSocks, SIGNAL(toggled(bool)), ui->proxyIp, SLOT(setEnabled(bool)));
+    connect(ui->connectSocks, SIGNAL(toggled(bool)), ui->proxyPort, SLOT(setEnabled(bool)));
 
     ui->proxyIp->installEventFilter(this);
     ui->proxyPort->installEventFilter(this);
@@ -67,9 +68,12 @@ OptionsDialog::OptionsDialog(QWidget* parent, bool enableWallet) : QDialog(paren
     ui->tabWidget->removeTab(ui->tabWidget->indexOf(ui->tabWindow));
 #endif
 
-    /* remove Wallet tab in case of -disablewallet */
+    /* remove Wallet tab and zCredit options in case of -disablewallet */
     if (!enableWallet) {
         ui->tabWidget->removeTab(ui->tabWidget->indexOf(ui->tabWallet));
+
+        ui->verticalZcreditOptionsWidget->hide();
+        ui->verticalZcreditDisplayWidget->hide();
     }
 
     /* Display elements init */
@@ -96,7 +100,7 @@ OptionsDialog::OptionsDialog(QWidget* parent, bool enableWallet) : QDialog(paren
     ui->preferredDenom->addItem(QString("5000"), QVariant("5000"));
 
     /* Theme selector external themes */
-    fs::path pathAddr = GetDataDir() / "themes";
+    boost::filesystem::path pathAddr = GetDataDir() / "themes";
     QDir dir(pathAddr.string().c_str());
     dir.setFilter(QDir::Dirs | QDir::NoSymLinks | QDir::NoDotAndDotDot);
     QFileInfoList list = dir.entryInfoList();
@@ -109,7 +113,7 @@ OptionsDialog::OptionsDialog(QWidget* parent, bool enableWallet) : QDialog(paren
     /* Language selector */
     QDir translations(":translations");
     ui->lang->addItem(QString("(") + tr("default") + QString(")"), QVariant(""));
-    Q_FOREACH (const QString& langStr, translations.entryList()) {
+    foreach (const QString& langStr, translations.entryList()) {
         QLocale locale(langStr);
 
         /** check if the locale name consists of 2 parts (language_country) */
@@ -134,7 +138,7 @@ OptionsDialog::OptionsDialog(QWidget* parent, bool enableWallet) : QDialog(paren
     mapper->setOrientation(Qt::Vertical);
 
     /* setup/change UI elements when proxy IP is invalid/valid */
-    connect(this, &OptionsDialog::proxyIpChecks, this, &OptionsDialog::doProxyIpChecks);
+    connect(this, SIGNAL(proxyIpChecks(QValidatedLineEdit*, QLineEdit*)), this, SLOT(doProxyIpChecks(QValidatedLineEdit*, QLineEdit*)));
 }
 
 OptionsDialog::~OptionsDialog()
@@ -160,24 +164,27 @@ void OptionsDialog::setModel(OptionsModel* model)
         mapper->setModel(model);
         setMapper();
         mapper->toFirst();
+
+        /* keep consistency for action triggered elsewhere */
+        connect(model, SIGNAL(hideOrphansChanged(bool)), this, SLOT(updateHideOrphans(bool)));
     }
 
     /* warn when one of the following settings changes by user action (placed here so init via mapper doesn't trigger them) */
 
     /* Main */
-    connect(ui->databaseCache, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), this, &OptionsDialog::showRestartWarning);
-    connect(ui->threadsScriptVerif, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), this, &OptionsDialog::showRestartWarning);
+    connect(ui->databaseCache, SIGNAL(valueChanged(int)), this, SLOT(showRestartWarning()));
+    connect(ui->threadsScriptVerif, SIGNAL(valueChanged(int)), this, SLOT(showRestartWarning()));
     /* Wallet */
-    connect(ui->spendZeroConfChange, &QCheckBox::clicked, this, &OptionsDialog::showRestartWarning);
+    connect(ui->spendZeroConfChange, SIGNAL(clicked(bool)), this, SLOT(showRestartWarning()));
     /* Network */
-    connect(ui->allowIncoming, &QCheckBox::clicked, this, &OptionsDialog::showRestartWarning);
-    connect(ui->connectSocks, &QCheckBox::clicked, this, &OptionsDialog::showRestartWarning);
+    connect(ui->allowIncoming, SIGNAL(clicked(bool)), this, SLOT(showRestartWarning()));
+    connect(ui->connectSocks, SIGNAL(clicked(bool)), this, SLOT(showRestartWarning()));
     /* Display */
-    connect(ui->digits, static_cast<void (QValueComboBox::*)()>(&QValueComboBox::valueChanged), [this]{ showRestartWarning(); });
-    connect(ui->theme, static_cast<void (QValueComboBox::*)()>(&QValueComboBox::valueChanged), [this]{ showRestartWarning(); });
-    connect(ui->lang, static_cast<void (QValueComboBox::*)()>(&QValueComboBox::valueChanged), [this]{ showRestartWarning(); });
-    connect(ui->thirdPartyTxUrls, &QLineEdit::textChanged, [this]{ showRestartWarning(); });
-    connect(ui->showMasternodesTab, &QCheckBox::clicked, this, &OptionsDialog::showRestartWarning);
+    connect(ui->digits, SIGNAL(valueChanged()), this, SLOT(showRestartWarning()));
+    connect(ui->theme, SIGNAL(valueChanged()), this, SLOT(showRestartWarning()));
+    connect(ui->lang, SIGNAL(valueChanged()), this, SLOT(showRestartWarning()));
+    connect(ui->thirdPartyTxUrls, SIGNAL(textChanged(const QString&)), this, SLOT(showRestartWarning()));
+    connect(ui->showMasternodesTab, SIGNAL(clicked(bool)), this, SLOT(showRestartWarning()));
 }
 
 void OptionsDialog::setMapper()
@@ -284,7 +291,7 @@ void OptionsDialog::showRestartWarning(bool fPersistent)
         ui->statusLabel->setText(tr("This change would require a client restart."));
         // clear non-persistent status label after 10 seconds
         // Todo: should perhaps be a class attribute, if we extend the use of statusLabel
-        QTimer::singleShot(10000, this, &OptionsDialog::clearStatusLabel);
+        QTimer::singleShot(10000, this, SLOT(clearStatusLabel()));
     }
 }
 
@@ -336,7 +343,7 @@ bool OptionsDialog::eventFilter(QObject* object, QEvent* event)
 {
     if (event->type() == QEvent::FocusOut) {
         if (object == ui->proxyIp || object == ui->proxyPort) {
-            Q_EMIT proxyIpChecks(ui->proxyIp, ui->proxyPort);
+            emit proxyIpChecks(ui->proxyIp, ui->proxyPort);
         }
     }
     return QDialog::eventFilter(object, event);

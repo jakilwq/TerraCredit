@@ -1,6 +1,6 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
 // Copyright (c) 2009-2013 The Bitcoin developers
-// Copyright (c) 2016-2020 The PIVX developers
+// Copyright (c) 2016-2019 The TERRACREDIT developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -9,14 +9,12 @@
 
 #include "amount.h"
 #include "wallet/db.h"
-#include "wallet/hdchain.h"
 #include "key.h"
 #include "keystore.h"
-#include "script/keyorigin.h"
-#include "zpiv/zerocoin.h"
+#include "zcredit/zerocoin.h"
 #include "libzerocoin/Accumulator.h"
 #include "libzerocoin/Denominations.h"
-#include "zpiv/zpivtracker.h"
+#include "zcredit/zcredittracker.h"
 
 #include <list>
 #include <stdint.h>
@@ -26,6 +24,7 @@
 
 class CAccount;
 class CAccountingEntry;
+class CBitcoinAddress;
 struct CBlockLocator;
 class CKeyPool;
 class CMasterKey;
@@ -51,16 +50,9 @@ enum DBErrors {
 class CKeyMetadata
 {
 public:
-    // Metadata versions
-    static const int VERSION_BASIC = 1;
-    static const int VERSION_WITH_KEY_ORIGIN = 12;
-    // Active version
-    static const int CURRENT_VERSION = VERSION_WITH_KEY_ORIGIN;
-
+    static const int CURRENT_VERSION = 1;
     int nVersion;
     int64_t nCreateTime; // 0 means unknown
-    CKeyID hd_seed_id; //id of the HD seed used to derive this key
-    KeyOriginInfo key_origin; // Key origin info with path and fingerprint
 
     CKeyMetadata()
     {
@@ -68,34 +60,24 @@ public:
     }
     CKeyMetadata(int64_t nCreateTime_)
     {
-        SetNull();
+        nVersion = CKeyMetadata::CURRENT_VERSION;
         nCreateTime = nCreateTime_;
     }
 
     ADD_SERIALIZE_METHODS;
 
     template <typename Stream, typename Operation>
-    inline void SerializationOp(Stream& s, Operation ser_action)
+    inline void SerializationOp(Stream& s, Operation ser_action, int nType, int nVersion)
     {
-        READWRITE(nVersion);
+        READWRITE(this->nVersion);
+        nVersion = this->nVersion;
         READWRITE(nCreateTime);
-        if (HasKeyOrigin()) {
-            READWRITE(hd_seed_id);
-            READWRITE(key_origin);
-        }
     }
 
     void SetNull()
     {
         nVersion = CKeyMetadata::CURRENT_VERSION;
         nCreateTime = 0;
-        hd_seed_id.SetNull();
-        key_origin.clear();
-    }
-
-    bool HasKeyOrigin() const
-    {
-        return this->nVersion >= VERSION_WITH_KEY_ORIGIN;
     }
 };
 
@@ -120,6 +102,9 @@ public:
     bool WriteCryptedKey(const CPubKey& vchPubKey, const std::vector<unsigned char>& vchCryptedSecret, const CKeyMetadata& keyMeta);
     bool WriteMasterKey(unsigned int nID, const CMasterKey& kMasterKey);
 
+    bool WriteAutoConvertKey(const CBitcoinAddress& btcAddress);
+    void LoadAutoConvertKeys(std::set<CBitcoinAddress>& setAddresses);
+
     bool WriteCScript(const uint160& hash, const CScript& redeemScript);
 
     bool WriteWatchOnly(const CScript& script);
@@ -133,9 +118,8 @@ public:
 
     bool WriteOrderPosNext(int64_t nOrderPosNext);
 
-    bool WriteStakeSplitThreshold(const CAmount& nStakeSplitThreshold);
-    bool WriteUseCustomFee(bool fUse);
-    bool WriteCustomFeeValue(const CAmount& nCustomFee);
+    // presstab
+    bool WriteStakeSplitThreshold(uint64_t nStakeSplitThreshold);
     bool WriteMultiSend(std::vector<std::pair<std::string, int> > vMultiSend);
     bool EraseMultiSend(std::vector<std::pair<std::string, int> > vMultiSend);
     bool WriteMSettings(bool fMultiSendStake, bool fMultiSendMasternode, int nLastMultiSendHeight);
@@ -155,9 +139,6 @@ public:
 
     bool ReadAccount(const std::string& strAccount, CAccount& account);
     bool WriteAccount(const std::string& strAccount, const CAccount& account);
-
-    //! write the hdchain model (external/internal chain child index counter)
-    bool WriteHDChain(const CHDChain& chain);
 
     /// Write destination data key,value tuple to database
     bool WriteDestData(const std::string& address, const std::string& key, const std::string& value);
@@ -196,16 +177,23 @@ public:
     bool ReadZerocoinSpendSerialEntry(const CBigNum& bnSerial);
     bool WriteCurrentSeedHash(const uint256& hashSeed);
     bool ReadCurrentSeedHash(uint256& hashSeed);
-    bool WriteZPIVSeed(const uint256& hashSeed, const std::vector<unsigned char>& seed);
-    bool ReadZPIVSeed(const uint256& hashSeed, std::vector<unsigned char>& seed);
-    bool ReadZPIVSeed_deprecated(uint256& seed);
-    bool EraseZPIVSeed();
-    bool EraseZPIVSeed_deprecated();
+    bool WriteZCREDITSeed(const uint256& hashSeed, const std::vector<unsigned char>& seed);
+    bool ReadZCREDITSeed(const uint256& hashSeed, std::vector<unsigned char>& seed);
+    bool ReadZCREDITSeed_deprecated(uint256& seed);
+    bool EraseZCREDITSeed();
+    bool EraseZCREDITSeed_deprecated();
 
-    bool WriteZPIVCount(const uint32_t& nCount);
-    bool ReadZPIVCount(uint32_t& nCount);
+    bool WriteZCREDITCount(const uint32_t& nCount);
+    bool ReadZCREDITCount(uint32_t& nCount);
     std::map<uint256, std::vector<std::pair<uint256, uint32_t> > > MapMintPool();
     bool WriteMintPoolPair(const uint256& hashMasterSeed, const uint256& hashPubcoin, const uint32_t& nCount);
+
+    void LoadPrecomputes(std::list<std::pair<uint256, CoinWitnessCacheData> >& itemList, std::map<uint256, std::list<std::pair<uint256, CoinWitnessCacheData> >::iterator>& itemMap);
+    void LoadPrecomputes(std::set<uint256> setHashes);
+    void EraseAllPrecomputes();
+    bool WritePrecompute(const uint256& hash, const CoinWitnessCacheData& data);
+    bool ReadPrecompute(const uint256& hash, CoinWitnessCacheData& data);
+    bool ErasePrecompute(const uint256& hash);
 
 private:
     CWalletDB(const CWalletDB&);
@@ -215,8 +203,8 @@ private:
 };
 
 void NotifyBacked(const CWallet& wallet, bool fSuccess, std::string strMessage);
-bool BackupWallet(const CWallet& wallet, const fs::path& strDest, bool fEnableCustom = true);
-bool AttemptBackupWallet(const CWallet& wallet, const fs::path& pathSrc, const fs::path& pathDest);
+bool BackupWallet(const CWallet& wallet, const boost::filesystem::path& strDest, bool fEnableCustom = true);
+bool AttemptBackupWallet(const CWallet& wallet, const boost::filesystem::path& pathSrc, const boost::filesystem::path& pathDest);
 
 
 #endif // BITCOIN_WALLETDB_H

@@ -1,11 +1,11 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
 // Copyright (c) 2009-2014 The Bitcoin developers
-// Copyright (c) 2016-2018 The PIVX developers
+// Copyright (c) 2016-2018 The TERRACREDIT developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef PIVX_PUBKEY_H
-#define PIVX_PUBKEY_H
+#ifndef TERRACREDIT_PUBKEY_H
+#define TERRACREDIT_PUBKEY_H
 
 #include "hash.h"
 #include "serialize.h"
@@ -122,15 +122,19 @@ public:
     }
 
     //! Implement serialization, as if this was a byte vector.
+    unsigned int GetSerializeSize(int nType, int nVersion) const
+    {
+        return size() + 1;
+    }
     template <typename Stream>
-    void Serialize(Stream& s) const
+    void Serialize(Stream& s, int nType, int nVersion) const
     {
         unsigned int len = size();
         ::WriteCompactSize(s, len);
         s.write((char*)vch, len);
     }
     template <typename Stream>
-    void Unserialize(Stream& s)
+    void Unserialize(Stream& s, int nType, int nVersion)
     {
         unsigned int len = ::ReadCompactSize(s);
         if (len <= PUBLIC_KEY_SIZE) {
@@ -259,4 +263,4 @@ public:
     ~ECCVerifyHandle();
 };
 
-#endif // PIVX_PUBKEY_H
+#endif // TERRACREDIT_PUBKEY_H

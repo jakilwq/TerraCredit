@@ -1,5 +1,5 @@
 // Copyright (c) 2011-2014 The Bitcoin Core developers
-// Copyright (c) 2016-2019 The PIVX developers
+// Copyright (c) 2016-2019 The TERRACREDIT developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -181,7 +181,7 @@ BOOST_AUTO_TEST_CASE(CreateNewBlock_validity)
     hash = tx.GetHash();
     mempool.addUnchecked(hash, CTxMemPoolEntry(tx, 11, GetTime(), 111.0, 11));
     tx.vin[0].prevout.hash = hash;
-    tx.vin[0].scriptSig = CScript() << std::vector<unsigned char>(script.begin(), script.end());
+    tx.vin[0].scriptSig = CScript() << (std::vector<unsigned char>)script;
     tx.vout[0].nValue -= 1000000;
     hash = tx.GetHash();
     mempool.addUnchecked(hash, CTxMemPoolEntry(tx, 11, GetTime(), 111.0, 11));

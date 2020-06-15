@@ -1,5 +1,5 @@
 bench_inv
-bench_ecdh
+bench_credith
 bench_ecmult
 bench_sign
 bench_verify

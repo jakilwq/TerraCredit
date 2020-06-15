@@ -1,22 +1,22 @@
 dnl require autoconf 2.60 (AS_ECHO/AS_ECHO_N)
 AC_PREREQ([2.60])
-define(_CLIENT_VERSION_MAJOR, 4)
-define(_CLIENT_VERSION_MINOR, 1)
-define(_CLIENT_VERSION_REVISION, 99)
+define(_CLIENT_VERSION_MAJOR, 1)
+define(_CLIENT_VERSION_MINOR, 0)
+define(_CLIENT_VERSION_REVISION, 0)
 define(_CLIENT_VERSION_BUILD, 0)
 define(_CLIENT_VERSION_RC, 0)
-define(_CLIENT_VERSION_IS_RELEASE, false)
-define(_COPYRIGHT_YEAR, 2020)
-AC_INIT([PIVX Core],m4_join([.], _CLIENT_VERSION_MAJOR, _CLIENT_VERSION_MINOR, _CLIENT_VERSION_REVISION, m4_if(_CLIENT_VERSION_BUILD, [0], [], _CLIENT_VERSION_BUILD))m4_if(_CLIENT_VERSION_RC, [0], [], [rc]_CLIENT_VERSION_RC),[https://github.com/pivx-project/pivx/issues],[pivx],[https://pivx.org/])
+define(_CLIENT_VERSION_IS_RELEASE, true)
+define(_COPYRIGHT_YEAR, 2019)
+AC_INIT([TERRACREDIT Core],m4_join([.], _CLIENT_VERSION_MAJOR, _CLIENT_VERSION_MINOR, _CLIENT_VERSION_REVISION, m4_if(_CLIENT_VERSION_BUILD, [0], [], _CLIENT_VERSION_BUILD))m4_if(_CLIENT_VERSION_RC, [0], [], [rc]_CLIENT_VERSION_RC),[https://github.com/terracredit-project/terracredit/issues],[terracredit],[https://terra-credit.com/])
 AC_CONFIG_SRCDIR([src/main.cpp])
-AC_CONFIG_HEADERS([src/config/pivx-config.h])
+AC_CONFIG_HEADERS([src/config/terracredit-config.h])
 AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_MACRO_DIR([build-aux/m4])
 
-BITCOIN_DAEMON_NAME=pivxd
-BITCOIN_GUI_NAME=pivx-qt
-BITCOIN_CLI_NAME=pivx-cli
-BITCOIN_TX_NAME=pivx-tx
+BITCOIN_DAEMON_NAME=terracreditd
+BITCOIN_GUI_NAME=terracredit-qt
+BITCOIN_CLI_NAME=terracredit-cli
+BITCOIN_TX_NAME=terracredit-tx
 
 dnl Unless the user specified ARFLAGS, force it to be cr
 AC_ARG_VAR(ARFLAGS, [Flags for the archiver, defaults to <cr> if not set])
@@ -26,9 +26,9 @@ fi
 
 AC_CANONICAL_HOST
 
-AH_TOP([#ifndef PIV_CONFIG_H])
-AH_TOP([#define PIV_CONFIG_H])
-AH_BOTTOM([#endif //PIV_CONFIG_H])
+AH_TOP([#ifndef CREDIT_CONFIG_H])
+AH_TOP([#define CREDIT_CONFIG_H])
+AH_BOTTOM([#endif //CREDIT_CONFIG_H])
 
 dnl faketime breaks configure and is only needed for make. Disable it here.
 unset FAKETIME
@@ -132,7 +132,7 @@ AC_ARG_ENABLE(gui-tests,
 AC_ARG_ENABLE(bench,
     AS_HELP_STRING([--disable-bench],[do not compile benchmarks (default is to compile)]),
     [use_bench=$enableval],
-    [use_bench=yes])
+    [use_bench=no])
 
 AC_ARG_ENABLE([extended-functional-tests],
     AS_HELP_STRING([--enable-extended-functional-tests],[enable expensive functional tests when using lcov (default no)]),
@@ -180,12 +180,6 @@ AC_ARG_ENABLE([glibc-back-compat],
   [enable backwards compatibility with glibc])],
   [use_glibc_compat=$enableval],
   [use_glibc_compat=no])
-
-AC_ARG_ENABLE([threadlocal],
-  [AS_HELP_STRING([--enable-threadlocal],
-  [enable features that depend on the c++ thread_local keyword (currently just thread names in debug logs). (default is to enabled if there is platform support and glibc-back-compat is not enabled)])],
-  [use_thread_local=$enableval],
-  [use_thread_local=auto])
 
 AC_ARG_ENABLE([asm],
   [AS_HELP_STRING([--enable-asm],
@@ -407,7 +401,7 @@ CPPFLAGS="$CPPFLAGS -DHAVE_BUILD_INFO -D__STDC_FORMAT_MACROS"
 
 AC_ARG_WITH([utils],
   [AS_HELP_STRING([--with-utils],
-  [build pivx-cli pivx-tx (default=yes)])],
+  [build terracredit-cli terracredit-tx (default=yes)])],
   [build_bitcoin_utils=$withval],
   [build_bitcoin_utils=yes])
 
@@ -419,7 +413,7 @@ AC_ARG_WITH([libs],
 
 AC_ARG_WITH([daemon],
   [AS_HELP_STRING([--with-daemon],
-  [build pivxd daemon (default=yes)])],
+  [build terracreditd daemon (default=yes)])],
   [build_bitcoind=$withval],
   [build_bitcoind=yes])
 
@@ -550,7 +544,7 @@ case $host in
      fi
 
      AX_CHECK_LINK_FLAG([[-Wl,-headerpad_max_install_names]], [LDFLAGS="$LDFLAGS -Wl,-headerpad_max_install_names"])
-     CPPFLAGS="$CPPFLAGS -DMAC_OSX -DOBJC_OLD_DISPATCH_PROTOTYPES=0"
+     CPPFLAGS="$CPPFLAGS -DMAC_OSX"
      OBJCXXFLAGS="$CXXFLAGS"
      ;;
    *android*)
@@ -633,7 +627,7 @@ AC_C_BIGENDIAN
 dnl Check for pthread compile/link requirements
 AX_PTHREAD
 
-# The following macro will add the necessary defines to pivx-config.h, but
+# The following macro will add the necessary defines to terracredit-config.h, but
 # they also need to be passed down to any subprojects. Pull the results out of
 # the cache and add them to CPPFLAGS.
 AC_SYS_LARGEFILE
@@ -806,49 +800,27 @@ AC_LINK_IFELSE([AC_LANG_SOURCE([
   ]
 )
 
-if test "x$use_thread_local" = xyes || { test "x$use_thread_local" = xauto && test "x$use_glibc_compat" = xno; }; then
-  TEMP_LDFLAGS="$LDFLAGS"
-  LDFLAGS="$TEMP_LDFLAGS $PTHREAD_CFLAGS"
-  AC_MSG_CHECKING([for thread_local support])
-  AC_LINK_IFELSE([AC_LANG_SOURCE([
-    #include <thread>
-    static thread_local int foo = 0;
-    static void run_thread() { foo++;}
-    int main(){
-    for(int i = 0; i < 10; i++) { std::thread(run_thread).detach();}
-    return foo;
-    }
-    ])],
-    [
-     case $host in
-       *mingw*)
-          dnl mingw32's implementation of thread_local has also been shown to behave
-          dnl erroneously under concurrent usage; see:
-          dnl https://gist.github.com/jamesob/fe9a872051a88b2025b1aa37bfa98605
-          AC_MSG_RESULT(no)
-          ;;
-        *darwin*)
-          dnl TODO enable thread_local on later versions of Darwin where it is
-          dnl supported (per https://stackoverflow.com/a/29929949)
-          AC_MSG_RESULT(no)
-          ;;
-        *freebsd*)
-          dnl FreeBSD's implementation of thread_local is also buggy (per
-          dnl https://groups.google.com/d/msg/bsdmailinglist/22ncTZAbDp4/Dii_pII5AwAJ)
-          AC_MSG_RESULT(no)
-          ;;
-        *)
-          AC_DEFINE(HAVE_THREAD_LOCAL,1,[Define if thread_local is supported.])
-          AC_MSG_RESULT(yes)
-          ;;
-      esac
-    ],
-    [
-      AC_MSG_RESULT(no)
-    ]
-  )
-  LDFLAGS="$TEMP_LDFLAGS"
-fi
+TEMP_LDFLAGS="$LDFLAGS"
+LDFLAGS="$TEMP_LDFLAGS $PTHREAD_CFLAGS"
+AC_MSG_CHECKING([for thread_local support])
+AC_LINK_IFELSE([AC_LANG_SOURCE([
+  #include <thread>
+  static thread_local int foo = 0;
+  static void run_thread() { foo++;}
+  int main(){
+  for(int i = 0; i < 10; i++) { std::thread(run_thread).detach();}
+  return foo;
+  }
+  ])],
+  [
+    AC_DEFINE(HAVE_THREAD_LOCAL,1,[Define if thread_local is supported.])
+    AC_MSG_RESULT(yes)
+  ],
+  [
+    AC_MSG_RESULT(no)
+  ]
+)
+LDFLAGS="$TEMP_LDFLAGS"
 
 # Check for different ways of gathering OS randomness
 AC_MSG_CHECKING(for Linux getrandom syscall)
@@ -1224,11 +1196,11 @@ AC_SUBST(UNIVALUE_LIBS)
 
 BITCOIN_QT_PATH_PROGS([PROTOC], [protoc],$protoc_bin_path)
 
-AC_MSG_CHECKING([whether to build pivxd])
+AC_MSG_CHECKING([whether to build terracreditd])
 AM_CONDITIONAL([BUILD_BITCOIND], [test x$build_bitcoind = xyes])
 AC_MSG_RESULT($build_bitcoind)
 
-AC_MSG_CHECKING([whether to build utils (pivx-cli pivx-tx)])
+AC_MSG_CHECKING([whether to build utils (terracredit-cli terracredit-tx)])
 AM_CONDITIONAL([BUILD_BITCOIN_UTILS], [test x$build_bitcoin_utils = xyes])
 AC_MSG_RESULT($build_bitcoin_utils)
 
@@ -1356,7 +1328,7 @@ if test x$bitcoin_enable_qt != xno; then
     AC_MSG_WARN("xgettext is required to update qt translations")
   fi
 
-  AC_MSG_CHECKING([whether to build test_pivx-qt])
+  AC_MSG_CHECKING([whether to build test_terracredit-qt])
   if test x$use_gui_tests$bitcoin_enable_qt_test = xyesyes; then
     AC_MSG_RESULT([yes])
     BUILD_TEST_QT="yes"
@@ -1383,7 +1355,7 @@ esac
 AM_CONDITIONAL([USE_NUM_GMP], [test "x$set_bignum" = "xgmp"])
 AM_CONDITIONAL([USE_NUM_OPENSSL], [test "x$set_bignum" = "xopenssl"])
 
-AC_MSG_CHECKING([whether to build test_pivx])
+AC_MSG_CHECKING([whether to build test_terracredit])
 if test x$use_tests = xyes; then
   AC_MSG_RESULT([yes])
   BUILD_TEST="yes"

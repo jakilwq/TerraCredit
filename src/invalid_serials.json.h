@@ -1,11 +1,11 @@
-// Copyright (c) 2018 The PIVX developers
+// Copyright (c) 2018 The TERRACREDIT developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 
 
-#ifndef PIVX_INVALID_SERIALS_JSON_H
-#define PIVX_INVALID_SERIALS_JSON_H
+#ifndef TERRACREDIT_INVALID_SERIALS_JSON_H
+#define TERRACREDIT_INVALID_SERIALS_JSON_H
 
 #include <string>
 
@@ -124,7 +124,7 @@ std::string LoadInvalidSerials()
             "    \"s\": \"274cd2190936b541d92743221c9ba4c613175f112d52abf91ef2ce53002614f3\"\n"
             "  },\n"
             "  {\n"
-            "    \"s\": \"2776d35d90167cfec476f435106faa91490c0b9fae26c4a8ecd3a0789942818b\"\n"
+            "    \"s\": \"2776d35d90167cfec476f435106faa91490c0b9fae26c4a8credit3a0789942818b\"\n"
             "  },\n"
             "  {\n"
             "    \"s\": \"27d5123ce3c8ab80827632a3a95487cac4e6355bc08ad66c686e48eb182cafbe\"\n"
@@ -523,7 +523,7 @@ std::string LoadInvalidSerials()
             "    \"s\": \"b34a7dc6efd04a1661b553f11c5852921f9d735696fb9ab83ad4a05698435f17\"\n"
             "  },\n"
             "  {\n"
-            "    \"s\": \"b3ecd3f7c2807058647131b2293fdfa6401d39559d61e300d4466be020bc6cb6\"\n"
+            "    \"s\": \"b3credit3f7c2807058647131b2293fdfa6401d39559d61e300d4466be020bc6cb6\"\n"
             "  },\n"
             "  {\n"
             "    \"s\": \"b499f298f138aad71fd7e1c8e9e0dc29078e72e550c1d4d762aefd2df119c4ee\"\n"
@@ -544,7 +544,7 @@ std::string LoadInvalidSerials()
             "    \"s\": \"b696d3f8b7985d9e5999cdc8888fec2a74d9ca1570bda93b67139f5da2a0f071\"\n"
             "  },\n"
             "  {\n"
-            "    \"s\": \"b88649d422a39be2772f51ae7ecd5c9faed47a47c6ad082c26ac3ed119649946\"\n"
+            "    \"s\": \"b88649d422a39be2772f51ae7credit5c9faed47a47c6ad082c26ac3ed119649946\"\n"
             "  },\n"
             "  {\n"
             "    \"s\": \"b9d78a2580d588439e70445dcce3f80157a2a3f56cd0aff291d4a4d368e02bea\"\n"
@@ -592,7 +592,7 @@ std::string LoadInvalidSerials()
             "    \"s\": \"ca3a1bb927fa2371ed11d34f6f8033544e191a63650cc7e38638f61097e4b767\"\n"
             "  },\n"
             "  {\n"
-            "    \"s\": \"ca8a0048323989a3fc65fa8387c5443c5d219e7ecd9db7341f12fb8983222f6a\"\n"
+            "    \"s\": \"ca8a0048323989a3fc65fa8387c5443c5d219e7credit9db7341f12fb8983222f6a\"\n"
             "  },\n"
             "  {\n"
             "    \"s\": \"cb697a1ab429e78a1d844d182f9e6ec0e103f015a2390c70efd93d14a5a89e34\"\n"
@@ -904,7 +904,7 @@ std::string LoadInvalidSerials()
             "    \"s\": \"132a22828beb224540a4bef9dfbbbe9054a15d07479a68085c0a6cce546e01ec3\"\n"
             "  },\n"
             "  {\n"
-            "    \"s\": \"132bdf039d0c855593330cabe91e16fb725ff6ce34decd818f4b229aef71a0512\"\n"
+            "    \"s\": \"132bdf039d0c855593330cabe91e16fb725ff6ce34dcredit818f4b229aef71a0512\"\n"
             "  },\n"
             "  {\n"
             "    \"s\": \"1336eece5114f21db2ce35ad4ab00a583bab586a0e15886cf949c79f1eab625b0\"\n"
@@ -922,10 +922,10 @@ std::string LoadInvalidSerials()
             "    \"s\": \"13a23a77ce8d08bb0583d8d58fdecc7e9e68dce9ccdbbc62580efc162c96b0b18\"\n"
             "  },\n"
             "  {\n"
-            "    \"s\": \"13a9f322e20c3186ceb253decd3dbbfa1dc92f6d27ef495fef1582f01ee3ec187\"\n"
+            "    \"s\": \"13a9f322e20c3186ceb253dcredit3dbbfa1dc92f6d27ef495fef1582f01ee3ec187\"\n"
             "  },\n"
             "  {\n"
-            "    \"s\": \"13becd9ccc8e0ff987895e956e3e862871db012f1c58d4dfb57978e975f04f182\"\n"
+            "    \"s\": \"13bcredit9ccc8e0ff987895e956e3e862871db012f1c58d4dfb57978e975f04f182\"\n"
             "  },\n"
             "  {\n"
             "    \"s\": \"13ccacb75ab634d17389b7c3228d4d5347fb7b1116438db822e566eec9ad41b26\"\n"
@@ -1147,7 +1147,7 @@ std::string LoadInvalidSerials()
             "    \"s\": \"18ad95acfad235edd986985d727a704ef522b32d9f69271d37deb4c6c4fa920d1\"\n"
             "  },\n"
             "  {\n"
-            "    \"s\": \"18aef2b8a0f4ecd0e7aa8fa87d7298c38d437dce970d7dfb89b54a80271a9714e\"\n"
+            "    \"s\": \"18aef2b8a0f4credit0e7aa8fa87d7298c38d437dce970d7dfb89b54a80271a9714e\"\n"
             "  },\n"
             "  {\n"
             "    \"s\": \"18b6ca5c1a77b89c92d8e65e79b6a998754b97d0a4a8b8e9d92a6ec192b0552d8\"\n"
@@ -1189,4 +1189,4 @@ std::string LoadInvalidSerials()
     return str;
 }
 
-#endif //PIVX_INVALID_SERIALS_JSON_H
+#endif //TERRACREDIT_INVALID_SERIALS_JSON_H

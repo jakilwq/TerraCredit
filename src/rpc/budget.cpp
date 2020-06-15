@@ -1,5 +1,5 @@
 // Copyright (c) 2014-2015 The Dash developers
-// Copyright (c) 2015-2020 The PIVX developers
+// Copyright (c) 2015-2019 The TERRACREDIT developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -10,7 +10,6 @@
 #include "main.h"
 #include "masternode-budget.h"
 #include "masternode-payments.h"
-#include "masternode-sync.h"
 #include "masternodeconfig.h"
 #include "masternodeman.h"
 #include "messagesigner.h"
@@ -25,6 +24,7 @@ void budgetToJSON(CBudgetProposal* pbudgetProposal, UniValue& bObj)
 {
     CTxDestination address1;
     ExtractDestination(pbudgetProposal->GetPayee(), address1);
+    CBitcoinAddress address2(address1);
 
     bObj.push_back(Pair("Name", pbudgetProposal->GetName()));
     bObj.push_back(Pair("URL", pbudgetProposal->GetURL()));
@@ -34,7 +34,7 @@ void budgetToJSON(CBudgetProposal* pbudgetProposal, UniValue& bObj)
     bObj.push_back(Pair("BlockEnd", (int64_t)pbudgetProposal->GetBlockEnd()));
     bObj.push_back(Pair("TotalPaymentCount", (int64_t)pbudgetProposal->GetTotalPaymentCount()));
     bObj.push_back(Pair("RemainingPaymentCount", (int64_t)pbudgetProposal->GetRemainingPaymentCount()));
-    bObj.push_back(Pair("PaymentAddress", EncodeDestination(address1)));
+    bObj.push_back(Pair("PaymentAddress", address2.ToString()));
     bObj.push_back(Pair("Ratio", pbudgetProposal->GetRatio()));
     bObj.push_back(Pair("Yeas", (int64_t)pbudgetProposal->GetYeas()));
     bObj.push_back(Pair("Nays", (int64_t)pbudgetProposal->GetNays()));
@@ -50,7 +50,7 @@ void budgetToJSON(CBudgetProposal* pbudgetProposal, UniValue& bObj)
 }
 
 void checkBudgetInputs(const UniValue& params, std::string &strProposalName, std::string &strURL,
-                       int &nPaymentCount, int &nBlockStart, CTxDestination &address, CAmount &nAmount)
+                       int &nPaymentCount, int &nBlockStart, CBitcoinAddress &address, CAmount &nAmount)
 {
     strProposalName = SanitizeString(params[0].get_str());
     if (strProposalName.size() > 20)
@@ -70,7 +70,7 @@ void checkBudgetInputs(const UniValue& params, std::string &strProposalName, std
         throw JSONRPCError(RPC_IN_WARMUP, "Try again after active chain is loaded");
 
     // Start must be in the next budget cycle or later
-    const int budgetCycleBlocks = Params().GetConsensus().nBudgetCycleBlocks;
+    const int budgetCycleBlocks = Params().GetBudgetCycleBlocks();
     int pHeight = pindexPrev->nHeight;
 
     int nBlockMin = pHeight - (pHeight % budgetCycleBlocks) + budgetCycleBlocks;
@@ -79,23 +79,23 @@ void checkBudgetInputs(const UniValue& params, std::string &strProposalName, std
     if ((nBlockStart < nBlockMin) || ((nBlockStart % budgetCycleBlocks) != 0))
         throw JSONRPCError(RPC_INVALID_PARAMETER, strprintf("Invalid block start - must be a budget cycle block. Next valid block: %d", nBlockMin));
 
-    address = DecodeDestination(params[4].get_str());
-    if (!IsValidDestination(address))
-        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid PIVX address");
+    address = params[4].get_str();
+    if (!address.IsValid())
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid TERRACREDIT address");
 
     nAmount = AmountFromValue(params[5]);
     if (nAmount < 10 * COIN)
-        throw JSONRPCError(RPC_INVALID_PARAMETER, strprintf("Invalid amount - Payment of %s is less than minimum 10 %s allowed", FormatMoney(nAmount), CURRENCY_UNIT));
+        throw JSONRPCError(RPC_INVALID_PARAMETER, strprintf("Invalid amount - Payment of %d is less than minimum 10 CREDIT allowed", FormatMoney(nAmount)));
 
     if (nAmount > budget.GetTotalBudget(nBlockStart))
-        throw JSONRPCError(RPC_INVALID_PARAMETER, strprintf("Invalid amount - Payment of %s more than max of %s", FormatMoney(nAmount), FormatMoney(budget.GetTotalBudget(nBlockStart))));
+        throw JSONRPCError(RPC_INVALID_PARAMETER, strprintf("Invalid amount - Payment of %d more than max of %d", FormatMoney(nAmount), FormatMoney(budget.GetTotalBudget(nBlockStart))));
 }
 
 UniValue preparebudget(const UniValue& params, bool fHelp)
 {
     if (fHelp || params.size() != 6)
         throw std::runtime_error(
-            "preparebudget \"proposal-name\" \"url\" payment-count block-start \"pivx-address\" monthy-payment\n"
+            "preparebudget \"proposal-name\" \"url\" payment-count block-start \"terracredit-address\" monthy-payment\n"
             "\nPrepare proposal for network by signing and creating tx\n"
 
             "\nArguments:\n"
@@ -103,15 +103,15 @@ UniValue preparebudget(const UniValue& params, bool fHelp)
             "2. \"url\":            (string, required) URL of proposal details (64 character limit)\n"
             "3. payment-count:    (numeric, required) Total number of monthly payments\n"
             "4. block-start:      (numeric, required) Starting super block height\n"
-            "5. \"pivx-address\":   (string, required) PIVX address to send payments to\n"
+            "5. \"terracredit-address\":   (string, required) TERRACREDIT address to send payments to\n"
             "6. monthly-payment:  (numeric, required) Monthly payment amount\n"
 
             "\nResult:\n"
             "\"xxxx\"       (string) proposal fee hash (if successful) or error message (if failed)\n"
 
             "\nExamples:\n" +
-            HelpExampleCli("preparebudget", "\"test-proposal\" \"https://forum.pivx.org/t/test-proposal\" 2 820800 \"D9oc6C3dttUbv8zd7zGNq1qKBGf4ZQ1XEE\" 500") +
-            HelpExampleRpc("preparebudget", "\"test-proposal\" \"https://forum.pivx.org/t/test-proposal\" 2 820800 \"D9oc6C3dttUbv8zd7zGNq1qKBGf4ZQ1XEE\" 500"));
+            HelpExampleCli("preparebudget", "\"test-proposal\" \"https://forum.terra-credit.com/t/test-proposal\" 2 820800 \"D9oc6C3dttUbv8zd7zGNq1qKBGf4ZQ1XEE\" 500") +
+            HelpExampleRpc("preparebudget", "\"test-proposal\" \"https://forum.terra-credit.com/t/test-proposal\" 2 820800 \"D9oc6C3dttUbv8zd7zGNq1qKBGf4ZQ1XEE\" 500"));
 
     if (!pwalletMain) {
         throw JSONRPCError(RPC_IN_WARMUP, "Try again after active chain is loaded");
@@ -125,16 +125,16 @@ UniValue preparebudget(const UniValue& params, bool fHelp)
     std::string strURL;
     int nPaymentCount;
     int nBlockStart;
-    CTxDestination address;
+    CBitcoinAddress address;
     CAmount nAmount;
 
     checkBudgetInputs(params, strProposalName, strURL, nPaymentCount, nBlockStart, address, nAmount);
 
-    // Parse PIVX address
-    CScript scriptPubKey = GetScriptForDestination(address);
+    // Parse TERRACREDIT address
+    CScript scriptPubKey = GetScriptForDestination(address.Get());
 
     // create transaction 15 minutes into the future, to allow for confirmation time
-    CBudgetProposalBroadcast budgetProposalBroadcast(strProposalName, strURL, nPaymentCount, scriptPubKey, nAmount, nBlockStart, UINT256_ZERO);
+    CBudgetProposalBroadcast budgetProposalBroadcast(strProposalName, strURL, nPaymentCount, scriptPubKey, nAmount, nBlockStart, 0);
 
     std::string strError = "";
     if (!budgetProposalBroadcast.IsValid(strError, false))
@@ -148,14 +148,14 @@ UniValue preparebudget(const UniValue& params, bool fHelp)
     // }
 
     CWalletTx wtx;
-    if (!pwalletMain->GetBudgetSystemCollateralTX(wtx, budgetProposalBroadcast.GetHash(), useIX)) { // 50 PIV collateral for proposal
+    if (!pwalletMain->GetBudgetSystemCollateralTX(wtx, budgetProposalBroadcast.GetHash(), useIX)) { // 50 CREDIT collateral for proposal
         throw std::runtime_error("Error making collateral transaction for proposal. Please check your wallet balance.");
     }
 
     // make our change address
     CReserveKey reservekey(pwalletMain);
     //send the tx to the network
-    pwalletMain->CommitTransaction(wtx, reservekey, useIX ? NetMsgType::IX : NetMsgType::TX);
+    pwalletMain->CommitTransaction(wtx, reservekey, useIX ? "ix" : "tx");
 
     return wtx.GetHash().ToString();
 }
@@ -164,7 +164,7 @@ UniValue submitbudget(const UniValue& params, bool fHelp)
 {
     if (fHelp || params.size() != 7)
         throw std::runtime_error(
-            "submitbudget \"proposal-name\" \"url\" payment-count block-start \"pivx-address\" monthly-payment \"fee-tx\"\n"
+            "submitbudget \"proposal-name\" \"url\" payment-count block-start \"terracredit-address\" monthly-payment \"fee-tx\"\n"
             "\nSubmit proposal to the network\n"
 
             "\nArguments:\n"
@@ -172,7 +172,7 @@ UniValue submitbudget(const UniValue& params, bool fHelp)
             "2. \"url\":            (string, required) URL of proposal details (64 character limit)\n"
             "3. payment-count:    (numeric, required) Total number of monthly payments\n"
             "4. block-start:      (numeric, required) Starting super block height\n"
-            "5. \"pivx-address\":   (string, required) PIVX address to send payments to\n"
+            "5. \"terracredit-address\":   (string, required) TERRACREDIT address to send payments to\n"
             "6. monthly-payment:  (numeric, required) Monthly payment amount\n"
             "7. \"fee-tx\":         (string, required) Transaction hash from preparebudget command\n"
 
@@ -180,20 +180,20 @@ UniValue submitbudget(const UniValue& params, bool fHelp)
             "\"xxxx\"       (string) proposal hash (if successful) or error message (if failed)\n"
 
             "\nExamples:\n" +
-            HelpExampleCli("submitbudget", "\"test-proposal\" \"https://forum.pivx.org/t/test-proposal\" 2 820800 \"D9oc6C3dttUbv8zd7zGNq1qKBGf4ZQ1XEE\" 500") +
-            HelpExampleRpc("submitbudget", "\"test-proposal\" \"https://forum.pivx.org/t/test-proposal\" 2 820800 \"D9oc6C3dttUbv8zd7zGNq1qKBGf4ZQ1XEE\" 500"));
+            HelpExampleCli("submitbudget", "\"test-proposal\" \"https://forum.terra-credit.com/t/test-proposal\" 2 820800 \"D9oc6C3dttUbv8zd7zGNq1qKBGf4ZQ1XEE\" 500") +
+            HelpExampleRpc("submitbudget", "\"test-proposal\" \"https://forum.terra-credit.com/t/test-proposal\" 2 820800 \"D9oc6C3dttUbv8zd7zGNq1qKBGf4ZQ1XEE\" 500"));
 
     std::string strProposalName;
     std::string strURL;
     int nPaymentCount;
     int nBlockStart;
-    CTxDestination address;
+    CBitcoinAddress address;
     CAmount nAmount;
 
     checkBudgetInputs(params, strProposalName, strURL, nPaymentCount, nBlockStart, address, nAmount);
 
-    // Parse PIVX address
-    CScript scriptPubKey = GetScriptForDestination(address);
+    // Parse TERRACREDIT address
+    CScript scriptPubKey = GetScriptForDestination(address.Get());
 
     uint256 hash = ParseHashV(params[6], "parameter 1");
 
@@ -552,8 +552,7 @@ UniValue getnextsuperblock(const UniValue& params, bool fHelp)
     CBlockIndex* pindexPrev = chainActive.Tip();
     if (!pindexPrev) return "unknown";
 
-    const int nBlocksPerCycle = Params().GetConsensus().nBudgetCycleBlocks;
-    int nNext = pindexPrev->nHeight - pindexPrev->nHeight % nBlocksPerCycle + nBlocksPerCycle;
+    int nNext = pindexPrev->nHeight - pindexPrev->nHeight % Params().GetBudgetCycleBlocks() + Params().GetBudgetCycleBlocks();
     return nNext;
 }
 
@@ -575,7 +574,7 @@ UniValue getbudgetprojection(const UniValue& params, bool fHelp)
             "    \"BlockEnd\": n,                (numeric) Proposal ending block\n"
             "    \"TotalPaymentCount\": n,       (numeric) Number of payments\n"
             "    \"RemainingPaymentCount\": n,   (numeric) Number of remaining payments\n"
-            "    \"PaymentAddress\": \"xxxx\",     (string) PIVX address of payment\n"
+            "    \"PaymentAddress\": \"xxxx\",     (string) TERRACREDIT address of payment\n"
             "    \"Ratio\": x.xxx,               (numeric) Ratio of yeas vs nays\n"
             "    \"Yeas\": n,                    (numeric) Number of yea votes\n"
             "    \"Nays\": n,                    (numeric) Number of nay votes\n"
@@ -605,6 +604,7 @@ UniValue getbudgetprojection(const UniValue& params, bool fHelp)
 
         CTxDestination address1;
         ExtractDestination(pbudgetProposal->GetPayee(), address1);
+        CBitcoinAddress address2(address1);
 
         UniValue bObj(UniValue::VOBJ);
         budgetToJSON(pbudgetProposal, bObj);
@@ -638,7 +638,7 @@ UniValue getbudgetinfo(const UniValue& params, bool fHelp)
             "    \"BlockEnd\": n,                (numeric) Proposal ending block\n"
             "    \"TotalPaymentCount\": n,       (numeric) Number of payments\n"
             "    \"RemainingPaymentCount\": n,   (numeric) Number of remaining payments\n"
-            "    \"PaymentAddress\": \"xxxx\",     (string) PIVX address of payment\n"
+            "    \"PaymentAddress\": \"xxxx\",     (string) TERRACREDIT address of payment\n"
             "    \"Ratio\": x.xxx,               (numeric) Ratio of yeas vs nays\n"
             "    \"Yeas\": n,                    (numeric) Number of yea votes\n"
             "    \"Nays\": n,                    (numeric) Number of nay votes\n"
@@ -732,10 +732,8 @@ UniValue mnbudgetrawvote(const UniValue& params, bool fHelp)
     vote.nTime = nTime;
     vote.SetVchSig(vchSig);
 
-    if (!vote.CheckSignature()) {
-        // try old message version
-        vote.nMessVersion = MessageVersion::MESS_VER_STRMESS;
-        if (!vote.CheckSignature()) return "Failure to verify signature.";
+    if (!vote.CheckSignature(true)) {
+        return "Failure to verify signature.";
     }
 
     std::string strError = "";
@@ -777,7 +775,7 @@ UniValue mnfinalbudget(const UniValue& params, bool fHelp)
             throw std::runtime_error("Correct usage is 'mnfinalbudget vote-many BUDGET_HASH'");
 
         std::string strHash = params[1].get_str();
-        uint256 hash(uint256S(strHash));
+        uint256 hash(strHash);
 
         int success = 0;
         int failed = 0;
@@ -848,7 +846,7 @@ UniValue mnfinalbudget(const UniValue& params, bool fHelp)
             throw std::runtime_error("Correct usage is 'mnfinalbudget vote BUDGET_HASH'");
 
         std::string strHash = params[1].get_str();
-        uint256 hash(uint256S(strHash));
+        uint256 hash(strHash);
 
         CPubKey pubKeyMasternode;
         CKey keyMasternode;
@@ -905,7 +903,7 @@ UniValue mnfinalbudget(const UniValue& params, bool fHelp)
             throw std::runtime_error("Correct usage is 'mnbudget getvotes budget-hash'");
 
         std::string strHash = params[1].get_str();
-        uint256 hash(uint256S(strHash));
+        uint256 hash(strHash);
 
         UniValue obj(UniValue::VOBJ);
 
