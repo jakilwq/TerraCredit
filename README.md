@@ -17,9 +17,9 @@ More information at [terra-credit.com](http://www.terra-credit.com) Visit our AN
 <tr><td>Algo</td><td>Quark</td></tr>
 <tr><td>Block Time</td><td>60 Seconds</td></tr>
 <tr><td>Difficulty Retargeting</td><td>Every Block</td></tr>
-<tr><td>Max Coin Supply (PoW Phase)</td><td>9,995,000 CREDIT</td></tr>
+<tr><td>Max Coin Supply (PoW Phase)</td><td>100,995,000 CREDIT</td></tr>
 <tr><td>Max Coin Supply (PoS Phase)</td><td>Infinite</td></tr>
-<tr><td>Premine</td><td>5,000,000 CREDIT*</td></tr>
+<tr><td>Premine</td><td>100,000,000 CREDIT*</td></tr>
 </table>
 
 ### Reward Distribution
@@ -27,7 +27,7 @@ More information at [terra-credit.com](http://www.terra-credit.com) Visit our AN
 <table>
 <th colspan=4>Genesis Block</th>
 <tr><th>Block Height</th><th>Reward Amount</th><th>Notes</th></tr>
-<tr><td>1</td><td>5,000,000 CREDIT</td><td>Initial Pre-mine</td></tr>
+<tr><td>1</td><td>100,000,000 CREDIT</td><td>Initial Pre-mine</td></tr>
 </table>
 
 ### PoW Rewards Breakdown
