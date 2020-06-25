@@ -10,7 +10,7 @@ The goal of TERRACREDIT is to achieve a decentralized sustainable crypto currenc
 - Fast transactions featuring guaranteed zero confirmation transactions, we call it _SwiftX_.
 - Decentralized blockchain voting utilizing Masternode technology to form a DAO. The blockchain will distribute monthly treasury funds based on successful proposals submitted by the community and voted on by the DAO.
 
-More information at [terra-credit.com](http://www.terra-credit.com) Visit our ANN thread at [BitcoinTalk](http://www.bitcointalk.org/index.php?topic=1262920)
+More information at [terra-credit.com](http://www.terra-credit.com) 
 
 ### Coin Specs
 <table>
