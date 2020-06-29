@@ -487,7 +487,7 @@ Detailed release notes follow. For convenience in locating the code changes and 
 - #1110 `f89f672847` [Masterndoes] Masternodes sync try locking cs_main when it looks for the tip (furszy)
 - #1118 `3219d9b48c` [Sporks] Guard chainActive.Tip() and chainActive.Height() methods call. (furszy)
 - #1128 `d6573e70c7` [Consensus] nTimeOffset warning for time protocol V2 (random-zebra)
-- #1137 `4241574857` [Net] Protocol update enforcement for 70918 (random-zebra)
+- #1137 `4241574857` [Net] Protocol update enforcement for 30001 (random-zebra)
 - #1138 `e0c49356ae` [Consensus] nTimeOffset warning addition (random-zebra)
 - #1167 `fc4ffcf4af` [Trivial] Remove time offset warning when it gets back within range (random-zebra)
 - #1177 `421cc1017b` [Network] Add SPORK 17 & 18 to the fMissingSporks flag + code reorg. (furszy)

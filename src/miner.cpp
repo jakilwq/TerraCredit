@@ -702,7 +702,7 @@ void BitcoinMiner(CWallet* pwallet, bool fProofOfStake)
                 stakingBalance = pwallet->GetStakingBalance(fColdStake);
             }
 
-            while (vNodes.empty() || pwallet->IsLocked() || !fMintableCoins ||
+            while ((vNodes.empty() && Params().MiningRequiresPeers()) || pwallet->IsLocked() || !fMintableCoins ||
                    (stakingBalance > 0 && nReserveBalance >= stakingBalance) || masternodeSync.NotCompleted()) {
                 nLastCoinStakeSearchInterval = 0;
                 MilliSleep(5000);
@@ -795,6 +795,10 @@ void BitcoinMiner(CWallet* pwallet, bool fProofOfStake)
         uint256 hashTarget = uint256().SetCompact(pblock->nBits);
         while (true) {
             unsigned int nHashesDone = 0;
+
+            while ((vNodes.empty() && Params().MiningRequiresPeers()) || !masternodeSync.IsBlockchainSynced()) {
+                MilliSleep(5000);   // if you have no peers, you can't do mining.
+            }
 
             uint256 hash;
             while (true) {

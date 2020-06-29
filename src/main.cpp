@@ -2006,7 +2006,7 @@ int64_t GetBlockValue(int nHeight)
 
     int64_t nSubsidy = 0;
     if (nHeight < 1) {
-        nSubsidy = 5000000 * COIN;
+        nSubsidy = 100000000 * COIN;
     } else if (nHeight < Params().LAST_POW_BLOCK()) {
         nSubsidy = 5000 * COIN;
     } else
@@ -6516,8 +6516,8 @@ bool static ProcessMessage(CNode* pfrom, std::string strCommand, CDataStream& vR
         CBlockIndex* pindex = FindForkInGlobalIndex(chainActive, locator);
 
         // Send the rest of the chain
-        if (pindex)
-            pindex = chainActive.Next(pindex);
+        // if (pindex)
+        //     pindex = chainActive.Next(pindex);
         int nLimit = 500;
         LogPrint("net", "getblocks %d to %s limit %d from peer=%d\n", (pindex ? pindex->nHeight : -1), hashStop == uint256(0) ? "end" : hashStop.ToString(), nLimit, pfrom->id);
         for (; pindex; pindex = chainActive.Next(pindex)) {
@@ -6802,15 +6802,15 @@ bool static ProcessMessage(CNode* pfrom, std::string strCommand, CDataStream& vR
 
         //sometimes we will be sent their most recent block and its not the one we want, in that case tell where we are
         if (!mapBlockIndex.count(block.hashPrevBlock)) {
-            if (find(pfrom->vBlockRequested.begin(), pfrom->vBlockRequested.end(), hashBlock) != pfrom->vBlockRequested.end()) {
-                //we already asked for this block, so lets work backwards and ask for the previous block
-                pfrom->PushMessage("getblocks", chainActive.GetLocator(), block.hashPrevBlock);
-                pfrom->vBlockRequested.push_back(block.hashPrevBlock);
-            } else {
+            // if (find(pfrom->vBlockRequested.begin(), pfrom->vBlockRequested.end(), hashBlock) != pfrom->vBlockRequested.end()) {
+            //     //we already asked for this block, so lets work backwards and ask for the previous block
+            //     pfrom->PushMessage("getblocks", chainActive.GetLocator(), block.hashPrevBlock);
+            //     pfrom->vBlockRequested.push_back(block.hashPrevBlock);
+            // } else {
                 //ask to sync to this block
                 pfrom->PushMessage("getblocks", chainActive.GetLocator(), hashBlock);
                 pfrom->vBlockRequested.push_back(hashBlock);
-            }
+            // }
         } else {
             pfrom->AddInventoryKnown(inv);
 
@@ -7127,11 +7127,11 @@ bool static ProcessMessage(CNode* pfrom, std::string strCommand, CDataStream& vR
 //       it was the one which was commented out
 int ActiveProtocol()
 {
-    // SPORK_14 was used for 70917 (v3.4), commented out now.
+    // SPORK_14 was used for 30000 (v3.4), commented out now.
     //if (sporkManager.IsSporkActive(SPORK_14_NEW_PROTOCOL_ENFORCEMENT))
     //        return MIN_PEER_PROTO_VERSION_AFTER_ENFORCEMENT;
 
-    // SPORK_15 is used for 70918 (v4.0+)
+    // SPORK_15 is used for 30001 (v4.0+)
     if (sporkManager.IsSporkActive(SPORK_15_NEW_PROTOCOL_ENFORCEMENT_2))
         return MIN_PEER_PROTO_VERSION_AFTER_ENFORCEMENT;
 
@@ -7370,6 +7370,7 @@ bool SendMessages(CNode* pto, bool fSendTrickle)
 
         //
         // Message: inventory
+
         //
         std::vector<CInv> vInv;
         std::vector<CInv> vInvWait;
@@ -7398,11 +7399,19 @@ bool SendMessages(CNode* pto, bool fSendTrickle)
                 }
 
                 // returns true if wasn't already contained in the set
-                if (pto->setInventoryKnown.insert(inv).second) {
+                if (inv.type == MSG_BLOCK) {
                     vInv.push_back(inv);
                     if (vInv.size() >= 1000) {
                         pto->PushMessage("inv", vInv);
                         vInv.clear();
+                    }
+                } else {
+                    if (pto->setInventoryKnown.insert(inv).second) {
+                        vInv.push_back(inv);
+                        if (vInv.size() >= 1000) {
+                            pto->PushMessage("inv", vInv);
+                            vInv.clear();
+                        }
                     }
                 }
             }

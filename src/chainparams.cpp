@@ -52,8 +52,9 @@ static void convertSeed6(std::vector<CAddress>& vSeedsOut, const SeedSpec6* data
 //    timestamp before)
 // + Contains no strange transactions
 static Checkpoints::MapCheckpoints mapCheckpoints =
-    boost::assign::map_list_of(0, uint256("000003b9b910323aeedea426b5975b211b75ec74cbfbd603d24971230fd8797d"))
-    (100, uint256("00000107614324945e43cf47cd74dc82cbef082e6853d5c4536b89c6edfb01e3"))
+    boost::assign::map_list_of(0, uint256("0000017cdb739caceda194d99fad7ab5cbadeb4164dae92ff16656c3391ea6f3"))
+    (100, uint256("000000a60153a8cbdd7618ad7b461ab29865b02e93d001e09145a0d4e53920f8"))
+    (3000, uint256("189fbef6ddca70d4ff8d46f118543c620ec9e2a214e554abc5ed9491043b6b48"))
     // (616764, uint256("29dd0bd1c59484f290896687b4ffb6a49afa5c498caf61967c69a541f8191557")) //first block to use modifierV2
     // (623933, uint256("c7aafa648a0f1450157dc93bd4d7448913a85b7448f803b4ab970d91fc2a7da7"))
     // (791150, uint256("8e76f462e4e82d1bd21cb72e1ce1567d4ddda2390f26074ffd1f5d9c270e5e50"))
@@ -81,7 +82,7 @@ static const Checkpoints::CCheckpointData data = {
 };
 
 static Checkpoints::MapCheckpoints mapCheckpointsTestnet =
-    boost::assign::map_list_of(0, uint256("0x0000016d6f60fe96da38a37c70818f4ac2775f001bbea5704a1f5a227f1777c4"))
+    boost::assign::map_list_of(0, uint256("0x000001f6742d9291290bba1058d68321b85e5a88f16b4334b68997a678972dc8"))
     // (1016800, uint256("6ae7d52092fd918c8ac8d9b1334400387d3057997e6e927a88e57186dc395231"))
     // (1106100, uint256("c54b3e7e8b710e4075da1806adf2d508ae722627d5bcc43f594cf64d5eef8b30")) //!< zc public spend activation height
     // (1112700, uint256("2ad8d507dbe3d3841b9f8a29c3878d570228e9361c3e057362d7915777bbc849"))
@@ -237,7 +238,7 @@ public:
          *     CTxOut(nValue=50.00000000, scriptPubKey=0xA9037BAC7050C479B121CF)
          *   vMerkleTree: e0028e
          */
-        const char* pszTimestamp = "TerraCredit Genesis Block 2020-06-15";
+        const char* pszTimestamp = "TerraCredit Genesis Block 2020-06-27";
         CMutableTransaction txNew;
         txNew.vin.resize(1);
         txNew.vout.resize(1);
@@ -251,13 +252,15 @@ public:
         genesis.nTime = 1592203200;
         genesis.nBits = 0x1e0ffff0;
 
-        genesis.nNonce = 1580766;
+        genesis.nNonce = 115306;
 
         hashGenesisBlock = genesis.GetHash();
 
-        assert(hashGenesisBlock == uint256("0x000003b9b910323aeedea426b5975b211b75ec74cbfbd603d24971230fd8797d"));
-        assert(genesis.hashMerkleRoot == uint256("0x722fe50f7940a33e49c4b3456be8069228406fe09e2073a252c302292d0c8361"));
+        assert(hashGenesisBlock == uint256("0x0000017cdb739caceda194d99fad7ab5cbadeb4164dae92ff16656c3391ea6f3"));
+        assert(genesis.hashMerkleRoot == uint256("0xad2266874b2c2a0e1778c1b86b986d3165d68e2a075067f87f18fd644a9bfd1e"));
 
+        vSeeds.push_back(CDNSSeedData("terra-credit.com", "eva.terra-credit.com")); // Primary DNS Seeder from Fuzzbawls
+        vSeeds.push_back(CDNSSeedData("terra-credit.com", "luke.terra-credit.com")); // Primary DNS Seeder from Fuzzbawls
         vSeeds.push_back(CDNSSeedData("terra-credit.com", "seed01.terra-credit.com")); // Primary DNS Seeder from Fuzzbawls
         vSeeds.push_back(CDNSSeedData("terra-credit.com", "seed02.terra-credit.com")); // Primary DNS Seeder from Fuzzbawls
         vSeeds.push_back(CDNSSeedData("terra-credit.com", "seed03.terra-credit.com")); // Primary DNS Seeder from Fuzzbawls
@@ -380,11 +383,11 @@ public:
         //! Modify the testnet genesis block so the timestamp is valid for a later start.
         genesis.nTime = 1592203201;
 
-        genesis.nNonce = 979777;
+        genesis.nNonce = 1205626;
 
         hashGenesisBlock = genesis.GetHash();
 
-        assert(hashGenesisBlock == uint256("0x0000048b7db96c7ef819988492799cad73765feb0af9868287d10e70d7c16f80"));
+        assert(hashGenesisBlock == uint256("0x000001f6742d9291290bba1058d68321b85e5a88f16b4334b68997a678972dc8"));
 
         vFixedSeeds.clear();
         vSeeds.clear();
@@ -489,12 +492,12 @@ public:
 
         //! Modify the regtest genesis block so the timestamp is valid for a later start.
         genesis.nTime = 1592203202;
-        genesis.nNonce = 4;
+        genesis.nNonce = 1;
 
         hashGenesisBlock = genesis.GetHash();
         
-        assert(hashGenesisBlock == uint256("0x7568b7c1a729c0ad999d20833196ae258c0ec69381ac8942fa3db9d46e42bd74"));
-        // assert(hashGenesisBlock == uint256("0xab03f57d37ea761caae77d5501e47d9ee6649d2170ce759bc1a70cea748ef208"));
+        assert(hashGenesisBlock == uint256("0x20627ee1a891d794110da97fb59f03997f73817a2b7a591de41048bc4df2b2e8"));
+        // assert(hashGenesisBlock == uint256("0xad2266874b2c2a0e1778c1b86b986d3165d68e2a075067f87f18fd644a9bfd1e"));
 
         vFixedSeeds.clear(); //! Testnet mode doesn't have any fixed seeds.
         vSeeds.clear();      //! Testnet mode doesn't have any DNS seeds.

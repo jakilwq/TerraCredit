@@ -2298,7 +2298,7 @@ QPushButton[cssClass="btn-name-check"] {
     background-color: #FFFFFF;
     border:none;
     font-size:20px;
-    color: rgba(75, 125, 75, 0.5);
+    color: rgba(75, 119, 125, 0.5);
 }
 
 QPushButton[cssClass="btn-name-check"]:checked {
@@ -2665,7 +2665,7 @@ QPushButton[cssClass="btn-faq-options"] {
 }
 
 QPushButton[cssClass="btn-faq-options"]:checked {
-    background-color: rgba(136, 255, 136, 0.2);
+    background-color: rgba(136, 237, 255, 0.2);
     border:none;
     font-size:18px;
     color: #FFFFFF;
@@ -2735,9 +2735,9 @@ QPushButton[cssClass="ic-step-confirm-welcome"] {
     background-image: url("://ic-check-white");
     background-position:center;
     background-repeat:no-repeat;
-    border:  1px solid rgb(82, 157, 101);
+    border:  1px solid #52989d;
     border-radius:11px;
-    background-color:rgb(82, 157, 101);
+    background-color: #52989d;
 }
 
 *[cssClass="text-title-welcome"] {
