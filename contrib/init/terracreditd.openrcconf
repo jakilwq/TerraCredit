@@ -1,0 +1,33 @@
+# /etc/conf.d/terracreditd: config file for /etc/init.d/terracreditd
+
+# Config file location
+#BITCOIND_CONFIGFILE="/etc/terracredit/terracredit.conf"
+
+# What directory to write pidfile to?  (created and owned by $BITCOIND_USER)
+#BITCOIND_PIDDIR="/var/run/terracreditd"
+
+# What filename to give the pidfile
+#BITCOIND_PIDFILE="${BITCOIND_PIDDIR}/terracreditd.pid"
+
+# Where to write terracreditd data (be mindful that the blockchain is large)
+#BITCOIND_DATADIR="/var/lib/terracreditd"
+
+# User and group to own terracreditd process
+#BITCOIND_USER="terracredit"
+#BITCOIND_GROUP="terracredit"
+
+# Path to terracreditd executable
+#BITCOIND_BIN="/usr/bin/terracreditd"
+
+# Nice value to run terracreditd under
+#BITCOIND_NICE=0
+
+# Additional options (avoid -conf and -datadir, use flags above)
+#BITCOIND_OPTS=""
+
+# The timeout in seconds OpenRC will wait for bitcoind to terminate
+# after a SIGTERM has been raised.
+# Note that this will be mapped as argument to start-stop-daemon's
+# '--retry' option, which means you can specify a retry schedule
+# here. For more information see man 8 start-stop-daemon.
+BITCOIND_SIGTERM_TIMEOUT=60
