@@ -1,0 +1,15 @@
+# http://standards.freedesktop.org/desktop-entry-spec/desktop-entry-spec-1.0.html
+
+[Desktop Entry]
+Encoding=UTF-8
+Name=TERRACREDIT Core
+Comment=TERRACREDIT Core QT test network
+GenericName=TERRACREDIT Digital Currency QT client testnet network
+Exec=terracredit-core.qt-testnet %u
+Terminal=false
+Type=Application
+Icon=${SNAP}/share/pixmaps/terracredit_testnet.png
+MimeType=x-scheme-handler/credit;
+Categories=X-Office;X-Finance;
+Keywords=internet;terracredit;zcredit;tcredit;core;wallet;qt;testnet;snap;launchpad;crypto;digital;currency;coin;token;zerocoin;
+Version=1.0
