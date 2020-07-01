@@ -1,8 +1,0 @@
-/usr/bin/terracredit-cli		--	gen_context(system_u:object_r:terracredit_exec_t,s0)
-/usr/sbin/terracreditd		--	gen_context(system_u:object_r:terracredit_exec_t,s0)
-/usr/lib(64)?/terracredit/terracreditd		--	gen_context(system_u:object_r:terracredit_exec_t,s0)
-
-/etc/terracredit(/.*)?		gen_context(system_u:object_r:terracredit_conf_t,s0)
-/var/lib/terracredit(/.*)?		gen_context(system_u:object_r:terracredit_var_lib_t,s0)
-
-(/var)?/run/terracreditd(/.*)?   gen_context(system_u:object_r:terracredit_var_run_t,s0)

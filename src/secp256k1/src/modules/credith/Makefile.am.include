@@ -1,8 +1,0 @@
-include_HEADERS += include/secp256k1_credith.h
-noinst_HEADERS += src/modules/credith/main_impl.h
-noinst_HEADERS += src/modules/credith/tests_impl.h
-if USE_BENCHMARK
-noinst_PROGRAMS += bench_credith
-bench_credith_SOURCES = src/bench_credith.c
-bench_credith_LDADD = libsecp256k1.la $(SECP_LIBS) $(COMMON_LIB)
-endif
