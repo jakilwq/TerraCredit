@@ -1,0 +1,6 @@
+usr/local/bin/terracredit-qt usr/bin
+share/pixmaps/terracredit32.xpm usr/share/pixmaps
+share/pixmaps/terracredit16.xpm usr/share/pixmaps
+share/pixmaps/terracredit128.png usr/share/pixmaps
+debian/terracredit-qt.desktop usr/share/applications
+debian/terracredit-qt.protocol usr/share/kde4/services/
