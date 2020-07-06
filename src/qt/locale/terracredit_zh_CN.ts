@@ -1677,8 +1677,8 @@ It will start automatically as soon as the wallet has enough confirmations on an
         <translation>设置主节点名称</translation>
     </message>
     <message>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;A transaction of 100,000 CREDIT will be made&lt;/p&gt;&lt;p&gt;to a new empty address in your wallet.&lt;/p&gt;&lt;p&gt;The Address is labeled under the master node's name.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;将进行100,000 CREDIT的交易&lt;/p&gt;&lt;p&gt;到您的钱包空地址&lt;/p&gt;&lt;p&gt;地址被标记在主节点的名称之下&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;A transaction of 50,000 CREDIT will be made&lt;/p&gt;&lt;p&gt;to a new empty address in your wallet.&lt;/p&gt;&lt;p&gt;The Address is labeled under the master node's name.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;将进行50,000 CREDIT的交易&lt;/p&gt;&lt;p&gt;到您的钱包空地址&lt;/p&gt;&lt;p&gt;地址被标记在主节点的名称之下&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <source>Set Master Node’s IP and port</source>
@@ -1910,8 +1910,8 @@ Are you sure?</source>
         <translation>主节点配置文件不存在</translation>
     </message>
     <message>
-        <source>Not enough balance to create a masternode, 100,000 CREDIT required.</source>
-        <translation>没有足够的余额创建主节点，需要100,000 CREDIT。</translation>
+        <source>Not enough balance to create a masternode, 50,000 CREDIT required.</source>
+        <translation>没有足够的余额创建主节点，需要50,000 CREDIT。</translation>
     </message>
     <message>
         <source>Error creating masternode</source>
@@ -4331,7 +4331,7 @@ TERRACREDIT零币(zCREDIT)技术文件
                            &lt;ol&gt;&lt;li&gt;
                            Make sure your wallet is completely synchronized and you are using the latest release.
                            &lt;li&gt;
-                           You must have a balance of TERRACREDIT with a minimum of 101 confirmations.
+                           You must have a balance of TERRACREDIT with a minimum of 21 confirmations.
                            &lt;li&gt;
                            Your wallet must stay online and be unlocked for anonymization and staking purposes.
                            &lt;li&gt;
@@ -4418,7 +4418,7 @@ TERRACREDIT零币(zCREDIT)技术文件
         <source>
                            &lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align="justify"&gt;
                            A masternode is a computer running a full node TERRACREDIT core wallet with a
-                           requirement of 100,000 CREDIT secured collateral to provide extra services
+                           requirement of 50,000 CREDIT secured collateral to provide extra services
                            to the network and in return, receive a portion of the block reward
                            regularly.  These services include:
                            &lt;/p&gt;&lt;p align="justify"&gt;
@@ -4450,7 +4450,7 @@ TERRACREDIT零币(zCREDIT)技术文件
                            Requirements:
                            &lt;/p&gt;&lt;p align="justify"&gt;
                            &lt;ul&gt;
-                           &lt;li&gt;100,000 CREDIT per single Masternode instance&lt;/li&gt;
+                           &lt;li&gt;50,000 CREDIT per single Masternode instance&lt;/li&gt;
                            &lt;li&gt;Must be stored in a core wallet&lt;/li&gt;
                            &lt;li&gt;Need dedicated IP address&lt;/li&gt;
                            &lt;li&gt;Masternode wallet to remain online&lt;/li&gt;
@@ -4492,7 +4492,7 @@ TERRACREDIT零币(zCREDIT)技术文件
 要求：
 &lt;/p&gt;&lt;p align="justify"&gt;
 &lt;ul&gt;
-&lt;li&gt;每个主节点实例有100,000 CREDIT&lt;/li&gt;
+&lt;li&gt;每个主节点实例有50,000 CREDIT&lt;/li&gt;
 &lt;li&gt;必须存储在核心钱包&lt;/li&gt;
 &lt;li&gt;需要专用IP地址&lt;/li&gt;
 主节点钱包保持在线&lt;li&gt;
@@ -4510,8 +4510,8 @@ TERRACREDIT零币(zCREDIT)技术文件
         <translation>什么是主节点控制器？</translation>
     </message>
     <message>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align="justify"&gt;A Masternode Controller wallet is where the 100,000 CREDIT collateral can reside during a Controller-Remote masternode setup. It is a wallet that can activate the remote masternode wallet/s and allows you to keep your collateral coins offline while the remote masternode remains online. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align="justify"&gt;主节点控制器钱包是在控制器-远程主节点设置期间100,000 CREDIT附属品可以驻留的地方。这是一个可以激活远程主节点钱包的钱包/s，远程主节点保持在线的时候，可以让你的抵押品硬币离线。&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align="justify"&gt;A Masternode Controller wallet is where the 50,000 CREDIT collateral can reside during a Controller-Remote masternode setup. It is a wallet that can activate the remote masternode wallet/s and allows you to keep your collateral coins offline while the remote masternode remains online. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align="justify"&gt;主节点控制器钱包是在控制器-远程主节点设置期间50,000 CREDIT附属品可以驻留的地方。这是一个可以激活远程主节点钱包的钱包/s，远程主节点保持在线的时候，可以让你的抵押品硬币离线。&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <source>Frequently Asked Questions</source>

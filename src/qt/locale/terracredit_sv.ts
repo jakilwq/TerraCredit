@@ -1435,8 +1435,8 @@ Den startar automatiskt så snart plånboken har tillräckligt många bekräftel
         <translation>Ställ in Masternode namn</translation>
     </message>
     <message>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;A transaction of 100,000 CREDIT will be made&lt;/p&gt;&lt;p&gt;to a new empty address in your wallet.&lt;/p&gt;&lt;p&gt;The Address is labeled under the master node's name.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>En transaktion på 10 000 CREDIT kommer göras till en ny tom adress i din plånbok. Adressen är märkt under huvudnodens namn.</translation>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;A transaction of 50,000 CREDIT will be made&lt;/p&gt;&lt;p&gt;to a new empty address in your wallet.&lt;/p&gt;&lt;p&gt;The Address is labeled under the master node's name.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>En transaktion på 50,000 CREDIT kommer göras till en ny tom adress i din plånbok. Adressen är märkt under huvudnodens namn.</translation>
     </message>
     <message>
         <source>Set Master Node’s IP and port</source>
@@ -1701,7 +1701,7 @@ Are you sure?</source>
         <translation>Masternode conf file existerar inte</translation>
     </message>
     <message>
-        <source>Not enough balance to create a masternode, 100,000 CREDIT required.</source>
+        <source>Not enough balance to create a masternode, 50,000 CREDIT required.</source>
         <translation>Inte nog på saldot för att skapa en Masternode, 100000 CREDIT behövs.</translation>
     </message>
     <message>

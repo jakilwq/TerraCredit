@@ -13,7 +13,7 @@
 #include "spork.h"
 
 //
-// Bootup the Masternode, look for a 10000 TERRACREDIT input and register on the network
+// Bootup the Masternode, look for a 50,000 TERRACREDIT input and register on the network
 //
 void CActiveMasternode::ManageStatus()
 {

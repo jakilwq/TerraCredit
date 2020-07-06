@@ -95,7 +95,7 @@ UniValue preparebudget(const UniValue& params, bool fHelp)
 {
     if (fHelp || params.size() != 6)
         throw std::runtime_error(
-            "preparebudget \"proposal-name\" \"url\" payment-count block-start \"terracredit-address\" monthy-payment\n"
+            "preparebudget \"proposal-name\" \"url\" payment-count block-start \"terracredit-address\" monthly-payment\n"
             "\nPrepare proposal for network by signing and creating tx\n"
 
             "\nArguments:\n"
@@ -768,6 +768,10 @@ UniValue mnfinalbudget(const UniValue& params, bool fHelp)
     {
         LOCK(cs_main);
         fNewSigs = chainActive.NewSigsActive();
+    }
+
+    if (strCommand == "suggest") {
+        budget.SubmitFinalBudget();
     }
 
     if (strCommand == "vote-many") {

@@ -2603,7 +2603,7 @@ HH        FAQ
 HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
 
 *[cssClass="text-title-faq"] {
-    color:#88edff;
+    color:#055c6b;
     font-size:26px;
 }
 
@@ -2615,17 +2615,17 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
 }
 
 *[cssClass="text-subtitle-faq"] {
-    color:#FFFFFF;
+    color:#011c21;
     font-size:22px;
 }
 
 *[cssClass="text-content-faq"] {
-    color:#FFFFFF;
+    color:#011c21;
     font-size:18px;
 }
 
 *[cssClass="container-number-faq"] {
-    color:#FFFFFF;
+    color:#011c21;
     background-color: #4b777d;
     font-size:14px;
     border-radius: 2px;
@@ -2641,7 +2641,7 @@ QPushButton[cssClass="btn-faq-exit"] {
     border:none;
     padding:0 30px 0 0;
     font-size:18px;
-    color: #CCFFFFFF;
+    color: #011c21;
     text-align:left;
 }
 
@@ -2649,7 +2649,7 @@ QPushButton[cssClass="btn-faq-web"] {
     background-color:transparent;
     border:none;
     font-size:16px;
-    color: #88edff;
+    color: #005f95;
     text-align:left;
 }
 
@@ -2659,7 +2659,7 @@ QPushButton[cssClass="btn-faq-options"] {
     background-color:transparent;
     border:none;
     font-size:18px;
-    color: #FFFFFF;
+    color: #011c21;
     padding:0 20px;
     text-align:left;
 }
@@ -2668,7 +2668,7 @@ QPushButton[cssClass="btn-faq-options"]:checked {
     background-color: rgba(136, 251, 255, 0.2);
     border:none;
     font-size:18px;
-    color: #FFFFFF;
+    color: #011c21;
     padding:0 20px;
     text-align:left;
 }
@@ -2741,12 +2741,12 @@ QPushButton[cssClass="ic-step-confirm-welcome"] {
 }
 
 *[cssClass="text-title-welcome"] {
-    color:#FFFFFF;
+    color:#023238;
     font-size:26px;
 }
 
 *[cssClass="text-main-white"] {
-    color:#FFFFFF;
+    color:#023238;
     font-size:20px;
 }
 
@@ -2850,8 +2850,8 @@ QPushButton[cssClass="btn-welcome-number-check"] {
 }
 
 QPushButton[cssClass="btn-welcome-number-check"]:checked {
-    border:  1px solid #88edff;
-    background-color:#88edff;
+    border:  1px solid #006274;
+    background-color:#006274;
     font-size:14px;
     border-radius:11px;
     color: #4b777d;
@@ -2868,7 +2868,7 @@ QPushButton[cssClass="btn-welcome-name-check"]:checked {
     background-color:transparent;
     border:none;
     font-size:20px;
-    color: #88edff;
+    color: #006274;
 }
 
 
@@ -3185,7 +3185,7 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH
  */
 
 *[cssClass="text-intro-white"] {
-    color:#FFFFFF;
+    color:#023238;
     font-size:16px;
 }
 
@@ -3254,7 +3254,7 @@ QPushButton[cssClass="btn-dots-welcome"]:pressed {
 }
 
 QRadioButton[cssClass="radio-welcome"]:checked {
-    color: #88edff;
+    color: #001114;
     font-size:20px;
 }
 

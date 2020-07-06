@@ -1677,7 +1677,7 @@ Si avvierà automaticamente non appena il portafoglio avrà sufficienti conferme
         <translation>Imposta il nome del Masternode</translation>
     </message>
     <message>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;A transaction of 100,000 CREDIT will be made&lt;/p&gt;&lt;p&gt;to a new empty address in your wallet.&lt;/p&gt;&lt;p&gt;The Address is labeled under the master node's name.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;A transaction of 50,000 CREDIT will be made&lt;/p&gt;&lt;p&gt;to a new empty address in your wallet.&lt;/p&gt;&lt;p&gt;The Address is labeled under the master node's name.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Verrà effettuata una transazione di 100.000 CREDIT&lt;/p&gt;&lt;p&gt;a un nuovo indirizzo vuoto nel tuo portafoglio.&lt;p&gt;L'indirizzo è etichettato con il nome del Masternode.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
@@ -1910,7 +1910,7 @@ Sei sicuro?</translation>
         <translation>il file masternode.conf non esiste</translation>
     </message>
     <message>
-        <source>Not enough balance to create a masternode, 100,000 CREDIT required.</source>
+        <source>Not enough balance to create a masternode, 50,000 CREDIT required.</source>
         <translation>Saldo insufficiente per creare un masternode, sono necessari 100.000 CREDIT.</translation>
     </message>
     <message>
@@ -4368,7 +4368,7 @@ Se desideri più zCREDIT, dovrai forgiare il saldo nella scheda "Privacy".
                            &lt;ol&gt;&lt;li&gt;
                            Make sure your wallet is completely synchronized and you are using the latest release.
                            &lt;li&gt;
-                           You must have a balance of TERRACREDIT with a minimum of 101 confirmations.
+                           You must have a balance of TERRACREDIT with a minimum of 21 confirmations.
                            &lt;li&gt;
                            Your wallet must stay online and be unlocked for anonymization and staking purposes.
                            &lt;li&gt;
@@ -4396,7 +4396,7 @@ Se desideri più zCREDIT, dovrai forgiare il saldo nella scheda "Privacy".
                            &lt;ol&gt;&lt;li&gt;
                            Assicurati che il tuo portafoglio sia completamente sincronizzato e stai utilizzando l'ultima versione.
                            &lt;li&gt;
-                           Devi avere un saldo di TERRACREDIT con un minimo di 101 conferme.
+                           Devi avere un saldo di TERRACREDIT con un minimo di 21 conferme.
                            &lt;li&gt;
                            Il tuo portafoglio deve rimanere online ed essere sbloccato per scopi di anonimizzazione e staking.
                            &lt;li&gt;
@@ -4460,7 +4460,7 @@ Se desideri più zCREDIT, dovrai forgiare il saldo nella scheda "Privacy".
         <source>
                            &lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align="justify"&gt;
                            A masternode is a computer running a full node TERRACREDIT core wallet with a
-                           requirement of 100,000 CREDIT secured collateral to provide extra services
+                           requirement of 50,000 CREDIT secured collateral to provide extra services
                            to the network and in return, receive a portion of the block reward
                            regularly.  These services include:
                            &lt;/p&gt;&lt;p align="justify"&gt;
@@ -4492,7 +4492,7 @@ Se desideri più zCREDIT, dovrai forgiare il saldo nella scheda "Privacy".
                            Requirements:
                            &lt;/p&gt;&lt;p align="justify"&gt;
                            &lt;ul&gt;
-                           &lt;li&gt;100,000 CREDIT per single Masternode instance&lt;/li&gt;
+                           &lt;li&gt;50,000 CREDIT per single Masternode instance&lt;/li&gt;
                            &lt;li&gt;Must be stored in a core wallet&lt;/li&gt;
                            &lt;li&gt;Need dedicated IP address&lt;/li&gt;
                            &lt;li&gt;Masternode wallet to remain online&lt;/li&gt;
@@ -4534,7 +4534,7 @@ regolarmente. Questi servizi includono:
                            Requisiti:
                            &lt;/p&gt;&lt;p align="justify"&gt;
                            &lt;ul&gt;
-                           &lt;li&gt;100,000 CREDIT per singolo Masternode
+                           &lt;li&gt;50,000 CREDIT per singolo Masternode
                            &lt;li&gt;Devono essere conservati in un portafoglio core&lt;/li&gt;
                            &lt;li&gt;Necessita un indirizzo IP dedicato&lt;/li&gt;
                            &lt;li&gt;Il portafoglio del Masternode deve rimanere online&lt;/li&gt;
@@ -4551,7 +4551,7 @@ regolarmente. Questi servizi includono:
         <translation>Cos'è un Masternode controller?</translation>
     </message>
     <message>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align="justify"&gt;A Masternode Controller wallet is where the 100,000 CREDIT collateral can reside during a Controller-Remote masternode setup. It is a wallet that can activate the remote masternode wallet/s and allows you to keep your collateral coins offline while the remote masternode remains online. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align="justify"&gt;A Masternode Controller wallet is where the 50,000 CREDIT collateral can reside during a Controller-Remote masternode setup. It is a wallet that can activate the remote masternode wallet/s and allows you to keep your collateral coins offline while the remote masternode remains online. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align="justify"&gt;Un portafoglio Masternode Controller è dove i 100.000 CREDIT collaterali possono risiedere durante l'impostazione del Masternode Controller remoto. È un portafoglio che può attivare uno o più portafogli masternode remoti e ti consente di mantenere offline le tue valute collaterali mentre il masternode remoto rimane online.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>

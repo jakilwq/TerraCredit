@@ -1995,8 +1995,8 @@ double ConvertBitsToDouble(unsigned int nBits)
 int64_t GetBlockValue(int nHeight)
 {
     if (Params().NetworkID() == CBaseChainParams::TESTNET) {
-        if (nHeight < 200 && nHeight > 0)
-            return 250000 * COIN;
+        if (nHeight < 200)
+            return 2500 * COIN;
     }
 
     if (Params().NetworkID() == CBaseChainParams::REGTEST) {
@@ -4477,21 +4477,6 @@ bool CheckBlock(const CBlock& block, CValidationState& state, bool fCheckPOW, bo
         } else {
             if (fDebug)
                 LogPrintf("%s: Masternode payment check skipped on sync - skipping IsBlockPayeeValid()\n", __func__);
-        }
-    }
-
-    //check backbone payment transaction
-    if (nHeight > Params().LAST_POW_BLOCK()) {
-        CTransaction tx = block.vtx[1];
-        if (!tx.vout[1].IsZerocoinMint()) {
-            int nIndex = tx.vout.size() - 1;
-            CAmount nBlockValue = GetBlockValue(nHeight - 1);
-            CAmount nMasternodeValue = GetMasternodePayment(nHeight - 1, nBlockValue, 0, false);
-
-            if (tx.vout[nIndex].nValue != nMasternodeValue) {
-                return state.DoS(100, error("%s : rejected by check masternode lock-in at %d", __func__, nHeight),
-                    REJECT_INVALID, "check Backbone mismatch");
-            }
         }
     }
 

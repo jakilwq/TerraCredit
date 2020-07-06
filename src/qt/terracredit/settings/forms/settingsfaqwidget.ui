@@ -831,7 +831,7 @@
                            zCREDIT is an optional privacy-centric method of coin mixing on the
                            TERRACREDIT blockchain. Basically all your transactions cannot be tracked
                            on to any block explorer. You can read more about the technicals in the
-                           &lt;a style='color: #88edff' href='https://terra-credit.com/zcredit/'&gt;
+                           &lt;a style='color: #005f95' href='https://terra-credit.com/zcredit/'&gt;
                            &quot;TERRACREDIT Zerocoin (zCREDIT) Technical Paper&quot;&lt;/a&gt;.
                            &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;
                          </string>
@@ -1026,13 +1026,13 @@
                            balance to zCREDIT to assist the network. If you do not wish to
                            stake zCREDIT or take advantage of the privacy benefit it brings,
                            you can disable the automatic minting in your TERRACREDIT wallet by
-                           going to Settings-&gt;Options and deselecting ???Enable zCREDIT Automint???.
+                           going to Settings-&gt;Options and deselecting “Enable zCREDIT Automint”.
                            If you are not making use of the TERRACREDIT-QT or GUI you can simply open
                            your terracredit.conf file and add &lt;i&gt;enablezeromint=0&lt;/i&gt; Without the quotation
                            marks and restart your wallet to disable automint.&lt;/p&gt;
                            &lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;
                            You can read more about zCREDIT in the
-                           &lt;a style='color: #88edff' href='https://terra-credit.com/zcredit/'&gt; &quot;TERRACREDIT Zerocoin (zCREDIT) Technical Paper&quot;&lt;/a&gt;.
+                           &lt;a style='color: #005f95' href='https://terra-credit.com/zcredit/'&gt; &quot;TERRACREDIT Zerocoin (zCREDIT) Technical Paper&quot;&lt;/a&gt;.
                            If you would like to keep and stake your zCREDIT, please read the &quot;How do I stake&quot;
                            section of the FAQ below.
                            &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;
@@ -1134,7 +1134,7 @@
                            zCREDIT can be spent and sent to any TERRACREDIT address. The receiver will
                            receive standard TERRACREDIT but the origin of the TERRACREDIT is anonymized by the zCREDIT Protocol.
                            &lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;
-                           If you want more zCREDIT you will need to mint your balance in the ???Privacy??? tab.
+                           If you want more zCREDIT you will need to mint your balance in the “Privacy” tab.
                            &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;
                          </string>
                         </property>
@@ -1233,7 +1233,7 @@
                            &lt;ol&gt;&lt;li&gt;
                            Make sure your wallet is completely synchronized and you are using the latest release.
                            &lt;li&gt;
-                           You must have a balance of TERRACREDIT with a minimum of 101 confirmations.
+                           You must have a balance of TERRACREDIT with a minimum of 21 confirmations.
                            &lt;li&gt;
                            Your wallet must stay online and be unlocked for anonymization and staking purposes.
                            &lt;li&gt;
@@ -1346,10 +1346,10 @@
                          <string>
                            &lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;
                            We have support channels in most of our official chat groups, for example
-                           &lt;a style='color: #88edff' href='https://discord.terra-credit.com'&gt;
+                           &lt;a style='color: #005f95' href='https://discord.terra-credit.com'&gt;
                            #support in our Discord&lt;/a&gt;.
                            If you prefer to submit a ticket, One can be
-                           &lt;a style='color: #88edff' href='https://TERRACREDIT.freshdesk.com'&gt;
+                           &lt;a style='color: #005f95' href='https://TERRACREDIT.freshdesk.com'&gt;
                            our Freshdesk support site&lt;/a&gt;.
                            &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;
                          </string>
@@ -1445,7 +1445,7 @@
                          <string>
                            &lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;
                            A masternode is a computer running a full node TERRACREDIT core wallet with a
-                           requirement of 100,000 CREDIT secured collateral to provide extra services
+                           requirement of 50,000 CREDIT secured collateral to provide extra services
                            to the network and in return, receive a portion of the block reward
                            regularly.  These services include:
                            &lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;
@@ -1477,7 +1477,7 @@
                            Requirements:
                            &lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;
                            &lt;ul&gt;
-                           &lt;li&gt;100,000 CREDIT per single Masternode instance&lt;/li&gt;
+                           &lt;li&gt;50,000 CREDIT per single Masternode instance&lt;/li&gt;
                            &lt;li&gt;Must be stored in a core wallet&lt;/li&gt;
                            &lt;li&gt;Need dedicated IP address&lt;/li&gt;
                            &lt;li&gt;Masternode wallet to remain online&lt;/li&gt;
@@ -1573,7 +1573,7 @@
                       <item>
                        <widget class="QLabel" name="labelContent10">
                         <property name="text">
-                         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;A Masternode Controller wallet is where the 100,000 CREDIT collateral can reside during a Controller-Remote masternode setup. It is a wallet that can activate the remote masternode wallet/s and allows you to keep your collateral coins offline while the remote masternode remains online. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;A Masternode Controller wallet is where the 50,000 CREDIT collateral can reside during a Controller-Remote masternode setup. It is a wallet that can activate the remote masternode wallet/s and allows you to keep your collateral coins offline while the remote masternode remains online. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                         </property>
                         <property name="alignment">
                          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>

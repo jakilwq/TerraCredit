@@ -798,6 +798,7 @@ void BitcoinMiner(CWallet* pwallet, bool fProofOfStake)
 
             while ((vNodes.empty() && Params().MiningRequiresPeers()) || !masternodeSync.IsBlockchainSynced()) {
                 MilliSleep(5000);   // if you have no peers, you can't do mining.
+                continue;
             }
 
             uint256 hash;

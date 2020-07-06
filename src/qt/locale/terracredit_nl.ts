@@ -1676,8 +1676,8 @@ Het zal automatisch starten zodra de portemonnee voldoende bevestigingen heeft o
         <translation>Masternode's Naam instellen</translation>
     </message>
     <message>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;A transaction of 100,000 CREDIT will be made&lt;/p&gt;&lt;p&gt;to a new empty address in your wallet.&lt;/p&gt;&lt;p&gt;The Address is labeled under the master node's name.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Een transactie van 100,000 CREDIT zal gemaakt worden&lt;/p&gt;&lt;p&gt;naar een nieuw leeg adres in uw portemonnee.&lt;/p&gt;&lt;p&gt;Het adres is gelabeld onder de masternode's naam.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;A transaction of 50,000 CREDIT will be made&lt;/p&gt;&lt;p&gt;to a new empty address in your wallet.&lt;/p&gt;&lt;p&gt;The Address is labeled under the master node's name.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Een transactie van 50,000 CREDIT zal gemaakt worden&lt;/p&gt;&lt;p&gt;naar een nieuw leeg adres in uw portemonnee.&lt;/p&gt;&lt;p&gt;Het adres is gelabeld onder de masternode's naam.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <source>Set Master Node’s IP and port</source>
@@ -1908,8 +1908,8 @@ Weet je het zeker?</translation>
         <translation>masternode.conf bestand bestaat niet</translation>
     </message>
     <message>
-        <source>Not enough balance to create a masternode, 100,000 CREDIT required.</source>
-        <translation>Niet genoeg balans om een masternode te creëren, 100,000 CREDIT vereist.</translation>
+        <source>Not enough balance to create a masternode, 50,000 CREDIT required.</source>
+        <translation>Niet genoeg balans om een masternode te creëren, 50,000 CREDIT vereist.</translation>
     </message>
     <message>
         <source>Error creating masternode</source>
@@ -4366,7 +4366,7 @@ Controleer of u een vooraf bepaalde teksteditor hebt geïnstalleerd.</translatio
                            &lt;ol&gt;&lt;li&gt;
                            Make sure your wallet is completely synchronized and you are using the latest release.
                            &lt;li&gt;
-                           You must have a balance of TERRACREDIT with a minimum of 101 confirmations.
+                           You must have a balance of TERRACREDIT with a minimum of 21 confirmations.
                            &lt;li&gt;
                            Your wallet must stay online and be unlocked for anonymization and staking purposes.
                            &lt;li&gt;
@@ -4394,7 +4394,7 @@ Controleer of u een vooraf bepaalde teksteditor hebt geïnstalleerd.</translatio
                            &lt;ol&gt;&lt;li&gt;
                            Zorg ervoor dat uw portemonnee volledig gesynchroniseerd is en dat u de laatste versie gebruikt.
                            &lt;li&gt;
-                           U moet een saldo van TERRACREDIT hebben met een minimum van 101 bevestigingen.
+                           U moet een saldo van TERRACREDIT hebben met een minimum van 21 bevestigingen.
                            &lt;li&gt;
                            Uw portemonnee moet online blijven en worden ontgrendeld voor anonimisering en staking-doeleinden.
                            &lt;li&gt;
@@ -4458,7 +4458,7 @@ Controleer of u een vooraf bepaalde teksteditor hebt geïnstalleerd.</translatio
         <source>
                            &lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align="justify"&gt;
                            A masternode is a computer running a full node TERRACREDIT core wallet with a
-                           requirement of 100,000 CREDIT secured collateral to provide extra services
+                           requirement of 50,000 CREDIT secured collateral to provide extra services
                            to the network and in return, receive a portion of the block reward
                            regularly.  These services include:
                            &lt;/p&gt;&lt;p align="justify"&gt;
@@ -4490,7 +4490,7 @@ Controleer of u een vooraf bepaalde teksteditor hebt geïnstalleerd.</translatio
                            Requirements:
                            &lt;/p&gt;&lt;p align="justify"&gt;
                            &lt;ul&gt;
-                           &lt;li&gt;100,000 CREDIT per single Masternode instance&lt;/li&gt;
+                           &lt;li&gt;50,000 CREDIT per single Masternode instance&lt;/li&gt;
                            &lt;li&gt;Must be stored in a core wallet&lt;/li&gt;
                            &lt;li&gt;Need dedicated IP address&lt;/li&gt;
                            &lt;li&gt;Masternode wallet to remain online&lt;/li&gt;
@@ -4532,7 +4532,7 @@ Controleer of u een vooraf bepaalde teksteditor hebt geïnstalleerd.</translatio
                            Vereisten:
                            &lt;/p&gt;&lt;p align="justify"&gt;
                            &lt;ul&gt;
-                           &lt;li&gt;100,000 CREDIT per Masternode instance&lt;/li&gt;
+                           &lt;li&gt;50,000 CREDIT per Masternode instance&lt;/li&gt;
                            &lt;li&gt;Moet in een kernportemonnee worden opgeborgen&lt;/li&gt;
                            &lt;li&gt;Vereist een vast IP-adres
                            &lt;li&gt;Masternode portemonnee moet online blijven&lt;/li&gt;
@@ -4549,7 +4549,7 @@ Controleer of u een vooraf bepaalde teksteditor hebt geïnstalleerd.</translatio
         <translation>Wat is een Masternode Controller?</translation>
     </message>
     <message>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align="justify"&gt;A Masternode Controller wallet is where the 100,000 CREDIT collateral can reside during a Controller-Remote masternode setup. It is a wallet that can activate the remote masternode wallet/s and allows you to keep your collateral coins offline while the remote masternode remains online. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align="justify"&gt;A Masternode Controller wallet is where the 50,000 CREDIT collateral can reside during a Controller-Remote masternode setup. It is a wallet that can activate the remote masternode wallet/s and allows you to keep your collateral coins offline while the remote masternode remains online. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align="justify"&gt;Een Masternode Controller portemonnee is waar de 100.000 CREDIT onderpand zich kan bevinden tijdens een Controller-Remote masternode setup. Het is een portemonnee die de remote masternode portemonnee(s) kan activeren en waarmee u uw ondergepande munten offline kunt houden terwijl de remote masternode online blijft. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
