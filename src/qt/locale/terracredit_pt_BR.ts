@@ -1416,8 +1416,8 @@ Ele será iniciado automaticamente assim que a carteira tiver confirmações suf
         <translation>Criar novo controlador de nó principal</translation>
     </message>
     <message>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;To create a TERRACREDIT Masternode you must dedicate 100.000 CREDIT (the unit of TERRACREDIT) to the network (however, these coins are still yours and will never leave your possession). &lt;/p&gt;&lt;p&gt;&lt;/p&gt;&lt;p&gt;You can deactivate the node and unlock the coins at any time.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>Para criar um Masternode TERRACREDIT, você deve dedicar 100.000 CREDIT (a unidade do TERRACREDIT) à rede (no entanto, essas moedas ainda são suas e nunca deixarão sua posse). Você pode desativar o nó e desbloquear as moedas a qualquer momento.</translation>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;To create a TERRACREDIT Masternode you must dedicate 50,000 CREDIT (the unit of TERRACREDIT) to the network (however, these coins are still yours and will never leave your possession). &lt;/p&gt;&lt;p&gt;&lt;/p&gt;&lt;p&gt;You can deactivate the node and unlock the coins at any time.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>Para criar um Masternode TERRACREDIT, você deve dedicar 50,000 CREDIT (a unidade do TERRACREDIT) à rede (no entanto, essas moedas ainda são suas e nunca deixarão sua posse). Você pode desativar o nó e desbloquear as moedas a qualquer momento.</translation>
     </message>
     <message>
         <source>Make sure you have this amount of coins.</source>
@@ -1429,7 +1429,7 @@ Ele será iniciado automaticamente assim que a carteira tiver confirmações suf
     </message>
     <message>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;A transaction of 50,000 CREDIT will be made&lt;/p&gt;&lt;p&gt;to a new empty address in your wallet.&lt;/p&gt;&lt;p&gt;The Address is labeled under the master node's name.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>A transação de 100.000 CREDIT será feita com um novo endereço vazio em sua carteira. O endereço é rotulado com o nome do nó principal.</translation>
+        <translation>A transação de 50,000 CREDIT será feita com um novo endereço vazio em sua carteira. O endereço é rotulado com o nome do nó principal.</translation>
     </message>
     <message>
         <source>Set Master Node’s IP and port</source>
@@ -1664,7 +1664,7 @@ Você tem certeza?</translation>
     </message>
     <message>
         <source>Not enough balance to create a masternode, 50,000 CREDIT required.</source>
-        <translation>Não há saldo suficiente para criar um masternode, 100.000 CREDIT necessários.</translation>
+        <translation>Não há saldo suficiente para criar um masternode, 50,000 CREDIT necessários.</translation>
     </message>
     <message>
         <source>Error creating masternode</source>
