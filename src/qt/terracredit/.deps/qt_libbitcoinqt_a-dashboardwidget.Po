@@ -322,9 +322,54 @@ qt/terracredit/qt_libbitcoinqt_a-dashboardwidget.o: \
  /usr/include/x86_64-linux-gnu/qt5/QtGui/qtextformat.h \
  /usr/include/x86_64-linux-gnu/qt5/QtCore/QMap \
  /usr/include/x86_64-linux-gnu/qt5/QtCore/qmap.h \
- config/terracredit-config.h qt/terracredit/forms/ui_dashboardwidget.h \
+ config/terracredit-config.h \
+ /usr/include/x86_64-linux-gnu/qt5/QtCharts/QChartView \
+ /usr/include/x86_64-linux-gnu/qt5/QtCharts/qchartview.h \
+ /usr/include/x86_64-linux-gnu/qt5/QtCharts/QAbstractAxis \
+ /usr/include/x86_64-linux-gnu/qt5/QtCharts/qabstractaxis.h \
+ /usr/include/x86_64-linux-gnu/qt5/QtCharts/QChartGlobal \
+ /usr/include/x86_64-linux-gnu/qt5/QtCharts/qchartglobal.h \
+ /usr/include/x86_64-linux-gnu/qt5/QtCore/QtGlobal \
+ /usr/include/x86_64-linux-gnu/qt5/QtCore/qglobal.h \
+ /usr/include/x86_64-linux-gnu/qt5/QtGui/QPen \
+ /usr/include/x86_64-linux-gnu/qt5/QtGui/qpen.h \
+ /usr/include/x86_64-linux-gnu/qt5/QtGui/QFont \
+ /usr/include/x86_64-linux-gnu/qt5/QtGui/qfont.h \
  /usr/include/x86_64-linux-gnu/qt5/QtCore/QVariant \
  /usr/include/x86_64-linux-gnu/qt5/QtCore/qvariant.h \
+ /usr/include/x86_64-linux-gnu/qt5/QtCharts/QAbstractSeries \
+ /usr/include/x86_64-linux-gnu/qt5/QtCharts/qabstractseries.h \
+ /usr/include/x86_64-linux-gnu/qt5/QtCore/QObject \
+ /usr/include/x86_64-linux-gnu/qt5/QtCharts/QChart \
+ /usr/include/x86_64-linux-gnu/qt5/QtCharts/qchart.h \
+ /usr/include/x86_64-linux-gnu/qt5/QtCharts/QLegend \
+ /usr/include/x86_64-linux-gnu/qt5/QtCharts/qlegend.h \
+ /usr/include/x86_64-linux-gnu/qt5/QtWidgets/QGraphicsWidget \
+ /usr/include/x86_64-linux-gnu/qt5/QtWidgets/qgraphicswidget.h \
+ /usr/include/x86_64-linux-gnu/qt5/QtWidgets/qgraphicslayoutitem.h \
+ /usr/include/x86_64-linux-gnu/qt5/QtGui/qevent.h \
+ /usr/include/x86_64-linux-gnu/qt5/QtWidgets/qgraphicsitem.h \
+ /usr/include/x86_64-linux-gnu/qt5/QtGui/QBrush \
+ /usr/include/x86_64-linux-gnu/qt5/QtGui/qbrush.h \
+ /usr/include/x86_64-linux-gnu/qt5/QtCore/QMargins \
+ /usr/include/x86_64-linux-gnu/qt5/QtCore/qmargins.h \
+ /usr/include/x86_64-linux-gnu/qt5/QtWidgets/QGraphicsView \
+ /usr/include/x86_64-linux-gnu/qt5/QtWidgets/qgraphicsview.h \
+ /usr/include/x86_64-linux-gnu/qt5/QtWidgets/qscrollarea.h \
+ /usr/include/x86_64-linux-gnu/qt5/QtWidgets/qabstractscrollarea.h \
+ /usr/include/x86_64-linux-gnu/qt5/QtWidgets/qgraphicsscene.h \
+ /usr/include/x86_64-linux-gnu/qt5/QtCharts/QBarSeries \
+ /usr/include/x86_64-linux-gnu/qt5/QtCharts/qbarseries.h \
+ /usr/include/x86_64-linux-gnu/qt5/QtCharts/QAbstractBarSeries \
+ /usr/include/x86_64-linux-gnu/qt5/QtCharts/qabstractbarseries.h \
+ /usr/include/x86_64-linux-gnu/qt5/QtCore/QStringList \
+ /usr/include/x86_64-linux-gnu/qt5/QtCharts/QBarCategoryAxis \
+ /usr/include/x86_64-linux-gnu/qt5/QtCharts/qbarcategoryaxis.h \
+ /usr/include/x86_64-linux-gnu/qt5/QtCharts/QBarSet \
+ /usr/include/x86_64-linux-gnu/qt5/QtCharts/qbarset.h \
+ /usr/include/x86_64-linux-gnu/qt5/QtCharts/QValueAxis \
+ /usr/include/x86_64-linux-gnu/qt5/QtCharts/qvalueaxis.h \
+ qt/terracredit/forms/ui_dashboardwidget.h \
  /usr/include/x86_64-linux-gnu/qt5/QtWidgets/QAction \
  /usr/include/x86_64-linux-gnu/qt5/QtWidgets/qaction.h \
  /usr/include/x86_64-linux-gnu/qt5/QtWidgets/qactiongroup.h \
@@ -353,7 +398,6 @@ qt/terracredit/qt_libbitcoinqt_a-dashboardwidget.o: \
  /usr/include/x86_64-linux-gnu/qt5/QtWidgets/QHeaderView \
  /usr/include/x86_64-linux-gnu/qt5/QtWidgets/qheaderview.h \
  /usr/include/x86_64-linux-gnu/qt5/QtWidgets/qabstractitemview.h \
- /usr/include/x86_64-linux-gnu/qt5/QtWidgets/qabstractscrollarea.h \
  /usr/include/x86_64-linux-gnu/qt5/QtCore/qitemselectionmodel.h \
  /usr/include/x86_64-linux-gnu/qt5/QtWidgets/QLabel \
  /usr/include/x86_64-linux-gnu/qt5/QtWidgets/qlabel.h \
@@ -1539,9 +1583,7 @@ qt/terracredit/qt_libbitcoinqt_a-dashboardwidget.o: \
  qt/terracredit/settings/settingsconsolewidget.h qt/rpcconsole.h \
  qt/clientmodel.h qt/optionsmodel.h utiltime.h \
  /usr/include/x86_64-linux-gnu/qt5/QtWidgets/QGraphicsLayout \
- /usr/include/x86_64-linux-gnu/qt5/QtWidgets/qgraphicslayout.h \
- /usr/include/x86_64-linux-gnu/qt5/QtWidgets/qgraphicslayoutitem.h \
- /usr/include/x86_64-linux-gnu/qt5/QtGui/qevent.h
+ /usr/include/x86_64-linux-gnu/qt5/QtWidgets/qgraphicslayout.h
 
 /usr/include/stdc-predef.h:
 
@@ -2317,11 +2359,99 @@ qt/transactionfilterproxy.h:
 
 config/terracredit-config.h:
 
-qt/terracredit/forms/ui_dashboardwidget.h:
+/usr/include/x86_64-linux-gnu/qt5/QtCharts/QChartView:
+
+/usr/include/x86_64-linux-gnu/qt5/QtCharts/qchartview.h:
+
+/usr/include/x86_64-linux-gnu/qt5/QtCharts/QAbstractAxis:
+
+/usr/include/x86_64-linux-gnu/qt5/QtCharts/qabstractaxis.h:
+
+/usr/include/x86_64-linux-gnu/qt5/QtCharts/QChartGlobal:
+
+/usr/include/x86_64-linux-gnu/qt5/QtCharts/qchartglobal.h:
+
+/usr/include/x86_64-linux-gnu/qt5/QtCore/QtGlobal:
+
+/usr/include/x86_64-linux-gnu/qt5/QtCore/qglobal.h:
+
+/usr/include/x86_64-linux-gnu/qt5/QtGui/QPen:
+
+/usr/include/x86_64-linux-gnu/qt5/QtGui/qpen.h:
+
+/usr/include/x86_64-linux-gnu/qt5/QtGui/QFont:
+
+/usr/include/x86_64-linux-gnu/qt5/QtGui/qfont.h:
 
 /usr/include/x86_64-linux-gnu/qt5/QtCore/QVariant:
 
 /usr/include/x86_64-linux-gnu/qt5/QtCore/qvariant.h:
+
+/usr/include/x86_64-linux-gnu/qt5/QtCharts/QAbstractSeries:
+
+/usr/include/x86_64-linux-gnu/qt5/QtCharts/qabstractseries.h:
+
+/usr/include/x86_64-linux-gnu/qt5/QtCore/QObject:
+
+/usr/include/x86_64-linux-gnu/qt5/QtCharts/QChart:
+
+/usr/include/x86_64-linux-gnu/qt5/QtCharts/qchart.h:
+
+/usr/include/x86_64-linux-gnu/qt5/QtCharts/QLegend:
+
+/usr/include/x86_64-linux-gnu/qt5/QtCharts/qlegend.h:
+
+/usr/include/x86_64-linux-gnu/qt5/QtWidgets/QGraphicsWidget:
+
+/usr/include/x86_64-linux-gnu/qt5/QtWidgets/qgraphicswidget.h:
+
+/usr/include/x86_64-linux-gnu/qt5/QtWidgets/qgraphicslayoutitem.h:
+
+/usr/include/x86_64-linux-gnu/qt5/QtGui/qevent.h:
+
+/usr/include/x86_64-linux-gnu/qt5/QtWidgets/qgraphicsitem.h:
+
+/usr/include/x86_64-linux-gnu/qt5/QtGui/QBrush:
+
+/usr/include/x86_64-linux-gnu/qt5/QtGui/qbrush.h:
+
+/usr/include/x86_64-linux-gnu/qt5/QtCore/QMargins:
+
+/usr/include/x86_64-linux-gnu/qt5/QtCore/qmargins.h:
+
+/usr/include/x86_64-linux-gnu/qt5/QtWidgets/QGraphicsView:
+
+/usr/include/x86_64-linux-gnu/qt5/QtWidgets/qgraphicsview.h:
+
+/usr/include/x86_64-linux-gnu/qt5/QtWidgets/qscrollarea.h:
+
+/usr/include/x86_64-linux-gnu/qt5/QtWidgets/qabstractscrollarea.h:
+
+/usr/include/x86_64-linux-gnu/qt5/QtWidgets/qgraphicsscene.h:
+
+/usr/include/x86_64-linux-gnu/qt5/QtCharts/QBarSeries:
+
+/usr/include/x86_64-linux-gnu/qt5/QtCharts/qbarseries.h:
+
+/usr/include/x86_64-linux-gnu/qt5/QtCharts/QAbstractBarSeries:
+
+/usr/include/x86_64-linux-gnu/qt5/QtCharts/qabstractbarseries.h:
+
+/usr/include/x86_64-linux-gnu/qt5/QtCore/QStringList:
+
+/usr/include/x86_64-linux-gnu/qt5/QtCharts/QBarCategoryAxis:
+
+/usr/include/x86_64-linux-gnu/qt5/QtCharts/qbarcategoryaxis.h:
+
+/usr/include/x86_64-linux-gnu/qt5/QtCharts/QBarSet:
+
+/usr/include/x86_64-linux-gnu/qt5/QtCharts/qbarset.h:
+
+/usr/include/x86_64-linux-gnu/qt5/QtCharts/QValueAxis:
+
+/usr/include/x86_64-linux-gnu/qt5/QtCharts/qvalueaxis.h:
+
+qt/terracredit/forms/ui_dashboardwidget.h:
 
 /usr/include/x86_64-linux-gnu/qt5/QtWidgets/QAction:
 
@@ -2378,8 +2508,6 @@ qt/terracredit/forms/ui_dashboardwidget.h:
 /usr/include/x86_64-linux-gnu/qt5/QtWidgets/qheaderview.h:
 
 /usr/include/x86_64-linux-gnu/qt5/QtWidgets/qabstractitemview.h:
-
-/usr/include/x86_64-linux-gnu/qt5/QtWidgets/qabstractscrollarea.h:
 
 /usr/include/x86_64-linux-gnu/qt5/QtCore/qitemselectionmodel.h:
 
@@ -5212,7 +5340,3 @@ utiltime.h:
 /usr/include/x86_64-linux-gnu/qt5/QtWidgets/QGraphicsLayout:
 
 /usr/include/x86_64-linux-gnu/qt5/QtWidgets/qgraphicslayout.h:
-
-/usr/include/x86_64-linux-gnu/qt5/QtWidgets/qgraphicslayoutitem.h:
-
-/usr/include/x86_64-linux-gnu/qt5/QtGui/qevent.h:

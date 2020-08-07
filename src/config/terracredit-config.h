@@ -404,7 +404,7 @@
 /* #undef USE_NUM_OPENSSL */
 
 /* Define if QTCHARTS support should be compiled in */
-/* #undef USE_QTCHARTS */
+#define USE_QTCHARTS 1
 
 /* UPnP support not compiled if undefined, otherwise value (0 or 1) determines
    default state */

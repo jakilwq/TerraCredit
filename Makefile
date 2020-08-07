@@ -240,8 +240,7 @@ am__DIST_COMMON = $(srcdir)/Makefile.in \
 	$(top_srcdir)/test/util/bitcoin-util-test.py \
 	$(top_srcdir)/test/util/rpcauth-test.py COPYING INSTALL \
 	build-aux/compile build-aux/config.guess build-aux/config.sub \
-	build-aux/depcomp build-aux/install-sh build-aux/ltmain.sh \
-	build-aux/missing
+	build-aux/install-sh build-aux/ltmain.sh build-aux/missing
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 distdir = $(PACKAGE)-$(VERSION)
 top_distdir = $(distdir)
@@ -293,7 +292,7 @@ AUTOCONF = ${SHELL} /home/ksk/Works/2020/2020-06/2020-06-12_TerraCredit/works/Ub
 AUTOHEADER = ${SHELL} /home/ksk/Works/2020/2020-06/2020-06-12_TerraCredit/works/Ubuntu_works/TerraCredit-1.2.0/build-aux/missing autoheader
 AUTOMAKE = ${SHELL} /home/ksk/Works/2020/2020-06/2020-06-12_TerraCredit/works/Ubuntu_works/TerraCredit-1.2.0/build-aux/missing automake-1.15
 AVX2_CXXFLAGS = -mavx -mavx2
-AWK = gawk
+AWK = mawk
 BDB_CFLAGS = 
 BDB_CPPFLAGS = 
 BDB_LIBS = -ldb_cxx-4.8
@@ -315,8 +314,8 @@ CC = gcc
 CCACHE = 
 CCDEPMODE = depmode=gcc3
 CFLAGS = -g -O2
-CHARTS_CFLAGS = 
-CHARTS_LIBS = 
+CHARTS_CFLAGS = -I/usr/include/x86_64-linux-gnu/qt5/QtCharts -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/x86_64-linux-gnu/qt5
+CHARTS_LIBS = -lQt5Charts -lQt5Widgets -lQt5Gui -lQt5Core
 CLIENT_VERSION_BUILD = 1
 CLIENT_VERSION_IS_RELEASE = true
 CLIENT_VERSION_MAJOR = 1
@@ -339,7 +338,7 @@ DEBUG_CXXFLAGS =
 DEFS = -DHAVE_CONFIG_H
 DEPDIR = .deps
 DLLTOOL = false
-DOXYGEN = /usr/bin/doxygen
+DOXYGEN = 
 DSYMUTIL = 
 DUMPBIN = 
 ECHO_C = 
@@ -357,7 +356,7 @@ FGREP = /bin/grep -F
 GCOV = /usr/bin/gcov
 GENHTML = 
 GENISOIMAGE = 
-GIT = /usr/bin/git
+GIT = 
 GPROF_CXXFLAGS = 
 GPROF_LDFLAGS = 
 GREP = /bin/grep
@@ -713,8 +712,8 @@ test/config.ini: $(top_builddir)/config.status $(top_srcdir)/test/config.ini.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
 contrib/devtools/split-debug.sh: $(top_builddir)/config.status $(top_srcdir)/contrib/devtools/split-debug.sh.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
-doc/Doxyfile: $(top_builddir)/config.status $(top_srcdir)/doc/Doxyfile.in
-	cd $(top_builddir) && $(SHELL) ./config.status $@
+#doc/Doxyfile: $(top_builddir)/config.status $(top_srcdir)/doc/Doxyfile.in
+#	cd $(top_builddir) && $(SHELL) ./config.status $@
 
 mostlyclean-libtool:
 	-rm -f *.lo
@@ -1313,9 +1312,9 @@ doc/doxygen/.stamp: doc/Doxyfile FORCE
 	$(DOXYGEN) $^
 	$(AM_V_at) touch $@
 
-docs: doc/doxygen/.stamp
-#docs:
-#	@echo "error: doxygen not found"
+#docs: doc/doxygen/.stamp
+docs:
+	@echo "error: doxygen not found"
 
 clean-docs:
 	rm -rf doc/doxygen

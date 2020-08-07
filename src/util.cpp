@@ -513,8 +513,8 @@ void ReadConfigFile(std::map<std::string, std::string>& mapSettingsRet,
             strHeader += rpc_user;
             strHeader += "\nrpcpassword=";
             strHeader += rpc_passwd;
-            strHeader += "\naddnode=134.122.60.36:32001\naddnode=134.122.60.35:32001\naddnode=167.71.75.145:32001\naddnode=165.22.199.5:32001\naddnode=161.35.95.129:32001\naddnode=161.35.146.128:32001\naddnode=142.93.139.161:32001\naddnode=142.93.131.124:32001\n";
-            strHeader += "\naddnode=eva.terra-credit.com:32001\naddnode=luke.terra-credit.com:32001\naddnode=seed01.terra-credit.com:32001\naddnode=seed02.terra-credit.com:32001\naddnode=seed03.terra-credit.com:32001\naddnode=seed04.terra-credit.com:32001\naddnode=seed05.terra-credit.com:32001\naddnode=seed06.terra-credit.com:32001\n";
+            strHeader += "\naddnode=142.93.228.146:32001\naddnode=134.122.60.36:32001\naddnode=134.122.60.35:32001\naddnode=167.71.75.145:32001\naddnode=165.22.199.5:32001\naddnode=161.35.95.129:32001\naddnode=161.35.146.128:32001\naddnode=142.93.139.161:32001\naddnode=142.93.131.124:32001\n";
+            strHeader += "\naddnode=explorer.terra-credit.com:32001\naddnode=eva.terra-credit.com:32001\naddnode=luke.terra-credit.com:32001\naddnode=seed01.terra-credit.com:32001\naddnode=seed02.terra-credit.com:32001\naddnode=seed03.terra-credit.com:32001\naddnode=seed04.terra-credit.com:32001\naddnode=seed05.terra-credit.com:32001\naddnode=seed06.terra-credit.com:32001\n";
             strHeader += "daemon=1\nserver=1\n";
             fwrite(strHeader.c_str(), std::strlen(strHeader.c_str()), 1, configFile);
             fclose(configFile);

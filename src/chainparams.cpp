@@ -262,6 +262,7 @@ public:
 
         vSeeds.push_back(CDNSSeedData("terra-credit.com", "eva.terra-credit.com")); // Primary DNS Seeder from Fuzzbawls
         vSeeds.push_back(CDNSSeedData("terra-credit.com", "luke.terra-credit.com")); // Primary DNS Seeder from Fuzzbawls
+        vSeeds.push_back(CDNSSeedData("terra-credit.com", "explorer.terra-credit.com")); // Primary DNS Seeder from Fuzzbawls
         vSeeds.push_back(CDNSSeedData("terra-credit.com", "seed01.terra-credit.com")); // Primary DNS Seeder from Fuzzbawls
         vSeeds.push_back(CDNSSeedData("terra-credit.com", "seed02.terra-credit.com")); // Primary DNS Seeder from Fuzzbawls
         vSeeds.push_back(CDNSSeedData("terra-credit.com", "seed03.terra-credit.com")); // Primary DNS Seeder from Fuzzbawls

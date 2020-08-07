@@ -930,7 +930,6 @@ am__qt_libbitcoinqt_a_SOURCES_DIST = qt/bantablemodel.cpp \
 	qt/terracredit/res/img/ic-connect.svg \
 	qt/terracredit/res/img/ic-submenu-lock.svg \
 	qt/terracredit/res/img/img-logo-terracredit@3x.png \
-	qt/terracredit/res/img/img-logo-terracredit.png \
 	qt/terracredit/res/img/ic-arrow-right-white.svg \
 	qt/terracredit/res/img/ic-arrow-left-white.svg \
 	qt/terracredit/res/img/ic-arrow-left.svg \
@@ -1936,7 +1935,7 @@ AUTOCONF = ${SHELL} /home/ksk/Works/2020/2020-06/2020-06-12_TerraCredit/works/Ub
 AUTOHEADER = ${SHELL} /home/ksk/Works/2020/2020-06/2020-06-12_TerraCredit/works/Ubuntu_works/TerraCredit-1.2.0/build-aux/missing autoheader
 AUTOMAKE = ${SHELL} /home/ksk/Works/2020/2020-06/2020-06-12_TerraCredit/works/Ubuntu_works/TerraCredit-1.2.0/build-aux/missing automake-1.15
 AVX2_CXXFLAGS = -mavx -mavx2
-AWK = gawk
+AWK = mawk
 BDB_CFLAGS = 
 BDB_CPPFLAGS = 
 BDB_LIBS = /usr/lib/libdb_cxx-4.8.a
@@ -1958,15 +1957,15 @@ CC = gcc
 CCACHE = 
 CCDEPMODE = depmode=gcc3
 CFLAGS = -g -O2
-CHARTS_CFLAGS = 
-CHARTS_LIBS = 
-CLIENT_VERSION_BUILD = 0
+CHARTS_CFLAGS = -I/usr/include/x86_64-linux-gnu/qt5/QtCharts -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/x86_64-linux-gnu/qt5
+CHARTS_LIBS = -lQt5Charts -lQt5Widgets -lQt5Gui -lQt5Core
+CLIENT_VERSION_BUILD = 1
 CLIENT_VERSION_IS_RELEASE = true
 CLIENT_VERSION_MAJOR = 1
-CLIENT_VERSION_MINOR = 0
+CLIENT_VERSION_MINOR = 2
 CLIENT_VERSION_REVISION = 0
 COMPAT_LDFLAGS = 
-COPYRIGHT_YEAR = 2019
+COPYRIGHT_YEAR = 2020
 CPP = gcc -E
 CPPFILT = /usr/bin/c++filt
 CPPFLAGS =  -DHAVE_BUILD_INFO -D__STDC_FORMAT_MACROS
@@ -1982,7 +1981,7 @@ DEBUG_CXXFLAGS =
 DEFS = -DHAVE_CONFIG_H
 DEPDIR = .deps
 DLLTOOL = false
-DOXYGEN = /usr/bin/doxygen
+DOXYGEN = 
 DSYMUTIL = 
 DUMPBIN = 
 ECHO_C = 
@@ -1991,7 +1990,7 @@ ECHO_T =
 EGREP = /bin/grep -E
 ERROR_CXXFLAGS = 
 EVENT_CFLAGS = 
-EVENT_LIBS = -levent
+EVENT_LIBS = /usr/lib/x86_64-linux-gnu/libevent.a
 EVENT_PTHREADS_CFLAGS = -pthread
 EVENT_PTHREADS_LIBS = /usr/lib/x86_64-linux-gnu/libevent_pthreads.a /usr/lib/x86_64-linux-gnu/libevent.a
 EXEEXT = 
@@ -2000,7 +1999,7 @@ FGREP = /bin/grep -F
 GCOV = /usr/bin/gcov
 GENHTML = 
 GENISOIMAGE = 
-GIT = /usr/bin/git
+GIT = 
 GPROF_CXXFLAGS = 
 GPROF_LDFLAGS = 
 GREP = /bin/grep
@@ -2057,10 +2056,10 @@ OTOOL64 =
 PACKAGE = terracredit
 PACKAGE_BUGREPORT = https://github.com/terracredit-project/terracredit/issues
 PACKAGE_NAME = TERRACREDIT Core
-PACKAGE_STRING = TERRACREDIT Core 1.2.0
+PACKAGE_STRING = TERRACREDIT Core 1.2.0.1
 PACKAGE_TARNAME = terracredit
 PACKAGE_URL = https://terra-credit.com/
-PACKAGE_VERSION = 1.2.0
+PACKAGE_VERSION = 1.2.0.1
 PATH_SEPARATOR = :
 PIC_FLAGS = -fPIC
 PIE_FLAGS = -fPIE
@@ -2144,7 +2143,7 @@ USE_NUM_GMP =
 USE_NUM_OPENSSL = 
 USE_QTCHARTS = 
 USE_UPNP = 
-VERSION = 1.2.0
+VERSION = 1.2.0.1
 WARN_CXXFLAGS =  -Wall -Wextra -Wformat -Wvla -Wformat-security -Wredundant-decls
 WINDOWS_BITS = 
 WINDRES = 
