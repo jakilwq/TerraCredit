@@ -36,7 +36,7 @@ UniValue getconnectioncount(const UniValue& params, bool fHelp)
 
     LOCK2(cs_main, cs_vNodes);
 
-    return (int)vNodes.size();
+    return (int)vNodes.siz
 }
 
 UniValue ping(const UniValue& params, bool fHelp)
