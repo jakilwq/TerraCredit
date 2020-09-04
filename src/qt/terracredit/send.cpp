@@ -59,8 +59,8 @@ SendWidget::SendWidget(TERRACREDITGUI* parent) :
     ui->labelSubtitle2->setText(tr("Select coin type to spend"));
     setCssProperty(ui->labelSubtitle2, "text-subtitle");
 
-    ui->pushLeft->setVisible(false);
-    ui->pushRight->setVisible(false);
+    // ui->pushLeft->setVisible(false);
+    // ui->pushRight->setVisible(false);
     ui->labelSubtitle1->setVisible(false);
     ui->labelSubtitle2->setVisible(false);
 

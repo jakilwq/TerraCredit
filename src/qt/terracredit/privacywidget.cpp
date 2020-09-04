@@ -114,7 +114,7 @@ PrivacyWidget::PrivacyWidget(TERRACREDITGUI* parent) :
     setCssBtnPrimary(ui->pushButtonSave);
 
     // Only Convert to CREDIT enabled.
-    ui->containerViewPrivacyChecks->setVisible(false);
+    // ui->containerViewPrivacyChecks->setVisible(false);
     onMintSelected(false);
 
     ui->btnTotalzCREDIT->setTitleClassAndText("btn-title-grey", "Total 0 zCREDIT");
@@ -140,7 +140,7 @@ PrivacyWidget::PrivacyWidget(TERRACREDITGUI* parent) :
     connect(ui->btnRescanMints, SIGNAL(clicked()), this, SLOT(onRescanMintsClicked()));
     connect(ui->btnResetZerocoin, SIGNAL(clicked()), this, SLOT(onResetZeroClicked()));
 
-    ui->pushRight->setChecked(true);
+    ui->pushLeft->setChecked(true);
     connect(ui->pushLeft, &QPushButton::clicked, [this](){onMintSelected(false);});
     connect(ui->pushRight,  &QPushButton::clicked, [this](){onMintSelected(true);});
 
@@ -240,7 +240,7 @@ void PrivacyWidget::onSendClicked(){
     }
 
     // Only convert enabled.
-    bool isConvert = true;// ui->pushLeft->isChecked();
+    bool isConvert = ui->pushLeft->isChecked();
 
     if(!GUIUtil::requestUnlock(walletModel, AskPassphraseDialog::Context::Mint_zCREDIT, true)){
         inform(tr("You need to unlock the wallet to be able to %1 zCREDIT").arg(isConvert ? tr("convert") : tr("mint")));
@@ -332,6 +332,7 @@ void PrivacyWidget::onRescanMintsClicked(){
     ){
         std::string strResetMintResult = walletModel->resetMintZerocoin();
         inform(QString::fromStdString(strResetMintResult));
+        updateDenomsSupply();
     }
 }
 

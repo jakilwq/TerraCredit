@@ -52,15 +52,15 @@ TopBar::TopBar(TERRACREDITGUI* _mainWindow, QWidget* parent) : PWidget(_mainWind
     setCssProperty({ui->labelAmountCredit, ui->labelAmountzCredit}, "amount-topbar");
     setCssProperty({ui->labelPendingCredit, ui->labelPendingzCredit, ui->labelImmatureCredit, ui->labelImmaturezCredit}, "amount-small-topbar");
 
-    ui->labelAmountTopzCredit->setVisible(false);
-    ui->label_16->setVisible(false);
-    ui->labelTitle2->setVisible(false);
-    ui->labelAmountzCredit->setVisible(false);
-    ui->labelTitle5->setVisible(false);
-    ui->labelPendingzCredit->setVisible(false);
-    ui->labelTitle6->setVisible(false);
-    ui->labelImmaturezCredit->setVisible(false);
-    ui->label_9->setVisible(false);
+    // ui->labelAmountTopzCredit->setVisible(false);
+    // ui->label_16->setVisible(false);
+    // ui->labelTitle2->setVisible(false);
+    // ui->labelAmountzCredit->setVisible(false);
+    // ui->labelTitle5->setVisible(false);
+    // ui->labelPendingzCredit->setVisible(false);
+    // ui->labelTitle6->setVisible(false);
+    // ui->labelImmaturezCredit->setVisible(false);
+    // ui->label_9->setVisible(false);
 
     // Progress Sync
     progressBar = new QProgressBar(ui->layoutSync);

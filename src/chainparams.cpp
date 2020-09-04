@@ -56,6 +56,7 @@ static Checkpoints::MapCheckpoints mapCheckpoints =
     (100, uint256("000000a60153a8cbdd7618ad7b461ab29865b02e93d001e09145a0d4e53920f8"))
     (3000, uint256("189fbef6ddca70d4ff8d46f118543c620ec9e2a214e554abc5ed9491043b6b48"))
     (12650, uint256("4c236b4b00fedee6f2c990491eee8d241d08a58d987c67b4bcf4954f51185d4a"))
+    (97500, uint256("fad763cb80cd5069da218c878683c07406ca8bd9f60f97a94dc6ef4bca54e7b8"))
     // (616764, uint256("29dd0bd1c59484f290896687b4ffb6a49afa5c498caf61967c69a541f8191557")) //first block to use modifierV2
     // (623933, uint256("c7aafa648a0f1450157dc93bd4d7448913a85b7448f803b4ab970d91fc2a7da7"))
     // (791150, uint256("8e76f462e4e82d1bd21cb72e1ce1567d4ddda2390f26074ffd1f5d9c270e5e50"))
@@ -198,8 +199,8 @@ public:
         nTerraCreditBadBlockTime = 1471401614;  // Skip nBit validation of Block 259201 per PR #915
         nTerraCreditBadBlocknBits = 0x1c056dac; // Skip nBit validation of Block 259201 per PR #915
         nModifierUpdateBlock = 615800;
-        nZerocoinStartHeight = 1500000;
-        nZerocoinStartTime = 1667216798;  // October 17, 2017 4:30:00 AM
+        nZerocoinStartHeight = 100000;
+        nZerocoinStartTime = 1599350000;        //    September 05, 2020 11:53:00 PM
         nBlockEnforceSerialRange = 895400;      //Enforce serial range starting this block
         nBlockRecalculateAccumulators = 908000; //Trigger a recalculation of accumulators
         nBlockFirstFraudulent = 891737;         //First block that bad serials emerged
@@ -216,7 +217,7 @@ public:
         nBlockTimeProtocolV2 = 2153200;
 
         // Public coin spend enforcement
-        nPublicZCSpends = 1880000;
+        nPublicZCSpends = 100100;
 
         // New P2P messages signatures
         nBlockEnforceNewMessageSignatures = nBlockTimeProtocolV2;
@@ -352,8 +353,8 @@ public:
         nMasternodeCountDrift = 4;
         nModifierUpdateBlock = 51197; //approx Mon, 17 Apr 2017 04:00:00 GMT
         nMaxMoneyOut = 43199500 * COIN;
-        nZerocoinStartHeight = 150000;
-        nZerocoinStartTime = 1667216798;
+        nZerocoinStartHeight = 83750;
+        nZerocoinStartTime = 1598645952;
         nBlockEnforceSerialRange = 895400;            //Enforce serial range starting this block
         nBlockRecalculateAccumulators = 9908000; //Trigger a recalculation of accumulators
         nBlockFirstFraudulent = 9891737;         //First block that bad serials emerged
@@ -369,7 +370,7 @@ public:
         nBlockTimeProtocolV2 = 1347000;
 
         // Public coin spend enforcement
-        nPublicZCSpends = 1106100;
+        nPublicZCSpends = 83855;
 
         // New P2P messages signatures
         nBlockEnforceNewMessageSignatures = nBlockTimeProtocolV2;
@@ -469,7 +470,7 @@ public:
         nMasternodeCountDrift = 4;
         nModifierUpdateBlock = 0; //approx Mon, 17 Apr 2017 04:00:00 GMT
         nMaxMoneyOut = 43199500 * COIN;
-        nZerocoinStartHeight = 30000;
+        nZerocoinStartHeight = 300;
         nBlockZerocoinV2 = 300000;
         nZerocoinStartTime = 1501776000;
         nBlockEnforceSerialRange = 1;              //Enforce serial range starting this block
@@ -480,7 +481,7 @@ public:
         nBlockTimeProtocolV2 = 999999999;
 
         // Public coin spend enforcement
-        nPublicZCSpends = 350;
+        nPublicZCSpends = 310;
 
         // Blocks v7
         nBlockV7StartHeight = nPublicZCSpends + 1;

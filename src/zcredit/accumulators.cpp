@@ -927,8 +927,8 @@ std::map<libzerocoin::CoinDenomination, int> GetMintMaturityHeight()
             for (auto denom : libzerocoin::zerocoinDenomList) {
                 //If the denom has not already had a mint added to it, then see if it has a mint added on this block
                 if (mapDenomMaturity.at(denom).first < Params().Zerocoin_RequiredAccumulation()) {
-                    mapDenomMaturity.at(denom).first += count(pindex->vMintDenominationsInBlock.begin(),
-                                                              pindex->vMintDenominationsInBlock.end(), denom);
+                    mapDenomMaturity.at(denom).first += 1; //count(pindex->vMintDenominationsInBlock.begin(),
+                                                             // pindex->vMintDenominationsInBlock.end(), denom);
 
                     //if mint was found then record this block as the first block that maturity occurs.
                     if (mapDenomMaturity.at(denom).first >= Params().Zerocoin_RequiredAccumulation())
